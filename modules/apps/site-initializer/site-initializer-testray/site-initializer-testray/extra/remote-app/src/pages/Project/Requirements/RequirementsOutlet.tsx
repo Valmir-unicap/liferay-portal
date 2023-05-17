@@ -45,7 +45,7 @@ const RequirementsOutlet = () => {
 	});
 
 	useEffect(() => {
-		setHeaderActions({actions, item: testrayRequirement, mutate});
+		setHeaderActions({actions: [], item: testrayRequirement, mutate});
 	}, [actions, mutate, setHeaderActions, testrayRequirement]);
 
 	useEffect(() => {
