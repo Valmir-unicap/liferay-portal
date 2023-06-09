@@ -51,7 +51,7 @@ function ProcessListPage({history, query, routeParams}) {
 		history.replace(`/processes/20/1/overdueInstanceCount:desc`);
 	}
 
-	usePageTitle(Liferay.Language.get('metrics'));
+	usePageTitle(Liferay.Language.get('add-product22'));
 
 	const {page, pageSize, sort} = routeParams;
 	const {search = ''} = parse(query);
