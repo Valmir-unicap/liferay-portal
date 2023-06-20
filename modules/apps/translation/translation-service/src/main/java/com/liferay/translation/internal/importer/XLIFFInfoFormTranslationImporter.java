@@ -84,29 +84,19 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	property = "content.type=application/xliff+xml",
 	service = {
-		TranslationInfoItemFieldValuesImporter.class,
-		TranslationSnapshotProvider.class
+		TranslationInfoItemFieldValuesImporter.class
 	}
 )
 public class XLIFFInfoFormTranslationImporter
-	implements TranslationInfoItemFieldValuesImporter,
-			   TranslationSnapshotProvider {
-
-	@Override
-	public TranslationSnapshot getTranslationSnapshot(
-			long groupId, InfoItemReference infoItemReference,
-			InputStream inputStream)
-		throws IOException, PortalException {
-
-		return _getTranslationSnapshot(
-			groupId, infoItemReference, inputStream, true);
-	}
+	implements TranslationInfoItemFieldValuesImporter{
 
 	@Override
 	public InfoItemFieldValues importInfoItemFieldValues(
 			long groupId, InfoItemReference infoItemReference,
 			InputStream inputStream)
 		throws IOException, XLIFFFileException {
+
+
 
 		TranslationSnapshot translationSnapshot = _getTranslationSnapshot(
 			groupId, infoItemReference, inputStream, false);
@@ -297,95 +287,9 @@ public class XLIFFInfoFormTranslationImporter
 		return LocaleUtil.fromLanguageId(targetLanguageProperty.getValue());
 	}
 
-	private TranslationSnapshot _getTranslationSnapshot(
-			long groupId, InfoItemReference infoItemReference,
-			InputStream inputStream, boolean includeSource)
-		throws IOException, XLIFFFileException {
 
-		Thread currentThread = Thread.currentThread();
 
-		ClassLoader contextClassLoader = currentThread.getContextClassLoader();
 
-		currentThread.setContextClassLoader(
-			XLIFFInfoFormTranslationImporter.class.getClassLoader());
-
-		try (AutoXLIFFFilter autoXLIFFFilter = new AutoXLIFFFilter()) {
-			List<Event> events = new ArrayList<>();
-
-			File tempFile = FileUtil.createTempFile(inputStream);
-
-			Document document = _saxReader.read(tempFile);
-
-			LocaleId sourceLocaleId = XLIFFLocaleIdUtil.getSourceLocaleId(
-				document);
-			LocaleId targetLocaleId = XLIFFLocaleIdUtil.getTargetLocaleId(
-				document);
-
-			autoXLIFFFilter.open(
-				new RawDocument(
-					tempFile.toURI(), document.getXMLEncoding(), sourceLocaleId,
-					targetLocaleId));
-
-			while (autoXLIFFFilter.hasNext()) {
-				events.add(autoXLIFFFilter.next());
-			}
-
-			if (_isVersion20(events)) {
-				return new TranslationSnapshot(
-					_getInfoItemFieldValuesXLIFFv20(
-						groupId, infoItemReference, tempFile, includeSource),
-					LocaleUtil.fromLanguageId(sourceLocaleId.toString()),
-					LocaleUtil.fromLanguageId(targetLocaleId.toString()));
-			}
-
-			return new TranslationSnapshot(
-				_getInfoItemFieldValuesXLIFFv12(
-					events, infoItemReference, includeSource),
-				LocaleUtil.fromLanguageId(sourceLocaleId.toString()),
-				LocaleUtil.fromLanguageId(targetLocaleId.toString()));
-		}
-		catch (OkapiIllegalFilterOperationException | XLIFFException
-					exception) {
-
-			if (exception.getCause() instanceof CharConversionException) {
-				throw new XLIFFFileException.MustHaveCorrectEncoding(exception);
-			}
-
-			throw new XLIFFFileException.MustBeValid(exception);
-		}
-		catch (DocumentException documentException) {
-			throw new XLIFFFileException.MustHaveCorrectEncoding(
-				documentException);
-		}
-		catch (InvalidParameterException invalidParameterException) {
-			throw new XLIFFFileException.MustHaveValidParameter(
-				invalidParameterException);
-		}
-		finally {
-			currentThread.setContextClassLoader(contextClassLoader);
-		}
-	}
-
-	private boolean _isVersion20(List<Event> events) {
-		for (Event event : events) {
-			if (event.isStartDocument()) {
-				StartDocument startDocument = event.getStartDocument();
-
-				Property versionProperty = startDocument.getProperty("version");
-
-				if (versionProperty != null) {
-					double version = GetterUtil.getDouble(
-						versionProperty.getValue());
-
-					if ((version >= 2.0) && (version < 3.0)) {
-						return true;
-					}
-				}
-			}
-		}
-
-		return false;
-	}
 
 	private void _produceInfoFieldValuesXLIFFv12(
 			UnsafeConsumer<InfoFieldValue<Object>, XLIFFFileException>
