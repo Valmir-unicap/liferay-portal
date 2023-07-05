@@ -83,10 +83,7 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	property = "content.type=application/xliff+xml",
-	service = {
-		TranslationInfoItemFieldValuesImporter.class,
-		TranslationSnapshotProvider.class
-	}
+	service = TranslationInfoItemFieldValuesImporter
 )
 public class XLIFFInfoFormTranslationImporter
 	implements TranslationInfoItemFieldValuesImporter,
