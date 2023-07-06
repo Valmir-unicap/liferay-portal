@@ -58,7 +58,7 @@ export function HeaderDropdown({
 			onActiveChange={setActive}
 			trigger={
 				<ClayButtonWithIcon
-					aria-label={Liferay.Language.get('more-actions')}
+					aria-label={Liferay.Language.get('add-product')}
 					disabled={disabled}
 					displayType="unstyled"
 					symbol="ellipsis-v"
