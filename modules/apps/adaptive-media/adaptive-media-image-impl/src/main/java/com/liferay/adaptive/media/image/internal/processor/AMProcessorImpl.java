@@ -46,7 +46,7 @@ import org.osgi.service.component.annotations.Reference;
 	service = AMProcessor.class
 )
 public final class AMProcessorImpl
-	implements AMProcessor<FileVersion, AMProcessorImpl> {
+	implements AMProcessor<FileVersion, AMProcessor> {
 
 	public void cleanUp(FileVersion fileVersion) throws PortalException {
 		if (!_amImageValidator.isValid(fileVersion)) {

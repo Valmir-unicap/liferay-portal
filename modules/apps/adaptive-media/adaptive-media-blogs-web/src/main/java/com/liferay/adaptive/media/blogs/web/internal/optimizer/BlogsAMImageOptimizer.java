@@ -20,7 +20,7 @@ import com.liferay.adaptive.media.image.configuration.AMImageConfigurationHelper
 import com.liferay.adaptive.media.image.counter.AMImageCounter;
 import com.liferay.adaptive.media.image.mime.type.AMImageMimeTypeProvider;
 import com.liferay.adaptive.media.image.optimizer.AMImageOptimizer;
-import com.liferay.adaptive.media.image.processor.AMImageProcessor;
+import com.liferay.adaptive.media.processor.AMProcessor;
 import com.liferay.blogs.model.BlogsEntry;
 import com.liferay.document.library.configuration.DLFileEntryConfiguration;
 import com.liferay.document.library.kernel.model.DLFileEntry;
@@ -140,7 +140,7 @@ public class BlogsAMImageOptimizer implements AMImageOptimizer {
 				FileEntry fileEntry = new LiferayFileEntry(dlFileEntry);
 
 				try {
-					_amImageProcessor.process(
+					_amProcessor.process(
 						fileEntry.getFileVersion(), configurationEntryUuid);
 
 					_sendStatusMessage(
@@ -205,7 +205,7 @@ public class BlogsAMImageOptimizer implements AMImageOptimizer {
 	private AMImageMimeTypeProvider _amImageMimeTypeProvider;
 
 	@Reference
-	private AMImageProcessor _amImageProcessor;
+	private AMProcessor _amProcessor;
 
 	@Reference
 	private BackgroundTaskStatusMessageSender

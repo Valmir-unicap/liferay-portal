@@ -18,7 +18,7 @@ import com.liferay.adaptive.media.AMAttribute;
 import com.liferay.adaptive.media.finder.AMQuery;
 import com.liferay.adaptive.media.finder.AMQueryBuilder;
 import com.liferay.adaptive.media.image.configuration.AMImageConfigurationEntry;
-import com.liferay.adaptive.media.image.processor.AMImageProcessor;
+import com.liferay.adaptive.media.processor.AMProcessor;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileVersion;
 
@@ -52,7 +52,7 @@ import java.util.function.Predicate;
  * @author Adolfo Pérez
  */
 public interface AMImageQueryBuilder
-	extends AMQueryBuilder<FileVersion, AMImageProcessor> {
+	extends AMQueryBuilder<FileVersion,AMProcessor<FileVersion, AMProcessor>> {
 
 	/**
 	 * An initial method that specifies that only adaptive media images that
@@ -123,7 +123,7 @@ public interface AMImageQueryBuilder
 		 *
 		 * @return the adaptive media query
 		 */
-		public AMQuery<FileVersion, AMImageProcessor> done();
+		public AMQuery<FileVersion, AMProcessor<FileVersion, AMProcessor>> done();
 
 	}
 
@@ -169,7 +169,7 @@ public interface AMImageQueryBuilder
 		 * @param value the attribute's value
 		 */
 		public <V> FuzzySortStep with(
-			AMAttribute<AMImageProcessor, V> amAttribute, V value);
+			AMAttribute<AMProcessor<FileVersion, AMProcessor>, V> amAttribute, V value);
 
 	}
 
@@ -240,7 +240,7 @@ public interface AMImageQueryBuilder
 		 * @param sortOrder the order used to sort the adaptive media images
 		 */
 		public <V> StrictSortStep orderBy(
-			AMAttribute<AMImageProcessor, V> amAttribute, SortOrder sortOrder);
+			AMAttribute<AMProcessor<FileVersion, AMProcessor>, V> amAttribute, SortOrder sortOrder);
 
 	}
 
