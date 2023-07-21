@@ -17,7 +17,8 @@ package com.liferay.adaptive.media.image.internal.processor;
 import com.liferay.adaptive.media.AMAttribute;
 import com.liferay.adaptive.media.AdaptiveMedia;
 import com.liferay.adaptive.media.image.internal.configuration.AMImageAttributeMapping;
-import com.liferay.adaptive.media.image.processor.AMImageProcessor;
+import com.liferay.adaptive.media.processor.AMProcessor;
+import com.liferay.portal.kernel.repository.model.FileVersion;
 
 import java.io.InputStream;
 
@@ -28,7 +29,8 @@ import java.util.function.Supplier;
 /**
  * @author Adolfo Pérez
  */
-public final class AMImage implements AdaptiveMedia<AMImageProcessor> {
+public final class AMImage
+	implements AdaptiveMedia<AMProcessor<FileVersion, AMProcessor>> {
 
 	public AMImage(
 		Supplier<InputStream> supplier,
@@ -50,7 +52,9 @@ public final class AMImage implements AdaptiveMedia<AMImageProcessor> {
 	}
 
 	@Override
-	public <V> V getValue(AMAttribute<AMImageProcessor, V> amAttribute) {
+	public <V> V getValue(
+		AMAttribute<AMProcessor<FileVersion, AMProcessor>, V> amAttribute) {
+
 		return _amImageAttributeMapping.getValue(amAttribute);
 	}
 

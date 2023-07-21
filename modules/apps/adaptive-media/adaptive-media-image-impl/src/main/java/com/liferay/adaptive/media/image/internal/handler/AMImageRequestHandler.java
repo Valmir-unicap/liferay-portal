@@ -25,9 +25,9 @@ import com.liferay.adaptive.media.image.internal.configuration.AMImageAttributeM
 import com.liferay.adaptive.media.image.internal.processor.AMImage;
 import com.liferay.adaptive.media.image.internal.util.Tuple;
 import com.liferay.adaptive.media.image.processor.AMImageAttribute;
-import com.liferay.adaptive.media.image.processor.AMImageProcessor;
 import com.liferay.adaptive.media.processor.AMAsyncProcessor;
 import com.liferay.adaptive.media.processor.AMAsyncProcessorLocator;
+import com.liferay.adaptive.media.processor.AMProcessor;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -54,10 +54,10 @@ import org.osgi.service.component.annotations.Reference;
 	service = AMRequestHandler.class
 )
 public class AMImageRequestHandler
-	implements AMRequestHandler<AMImageProcessor> {
+	implements AMRequestHandler<AMProcessor<FileVersion, AMProcessor>> {
 
 	@Override
-	public AdaptiveMedia<AMImageProcessor> handleRequest(
+	public AdaptiveMedia<AMProcessor<FileVersion, AMProcessor>> handleRequest(
 		HttpServletRequest httpServletRequest) {
 
 		Tuple<FileVersion, AMImageAttributeMapping> interpretedPath =
@@ -67,8 +67,8 @@ public class AMImageRequestHandler
 			return null;
 		}
 
-		AdaptiveMedia<AMImageProcessor> adaptiveMedia = _getAdaptiveMedia(
-			interpretedPath.first, interpretedPath.second);
+		AdaptiveMedia<AMProcessor<FileVersion, AMProcessor>> adaptiveMedia =
+			_getAdaptiveMedia(interpretedPath.first, interpretedPath.second);
 
 		if (adaptiveMedia != null) {
 			_processAMImage(
@@ -78,8 +78,8 @@ public class AMImageRequestHandler
 		return adaptiveMedia;
 	}
 
-	private AdaptiveMedia<AMImageProcessor> _createRawAdaptiveMedia(
-		FileVersion fileVersion) {
+	private AdaptiveMedia<AMProcessor<FileVersion, AMProcessor>>
+		_createRawAdaptiveMedia(FileVersion fileVersion) {
 
 		return new AMImage(
 			() -> {
@@ -93,13 +93,14 @@ public class AMImageRequestHandler
 			AMImageAttributeMapping.fromFileVersion(fileVersion), null);
 	}
 
-	private AdaptiveMedia<AMImageProcessor> _findAdaptiveMedia(
-			FileVersion fileVersion,
-			AMImageConfigurationEntry amImageConfigurationEntry)
+	private AdaptiveMedia<AMProcessor<FileVersion, AMProcessor>>
+			_findAdaptiveMedia(
+				FileVersion fileVersion,
+				AMImageConfigurationEntry amImageConfigurationEntry)
 		throws PortalException {
 
-		List<AdaptiveMedia<AMImageProcessor>> adaptiveMedias =
-			_amImageFinder.getAdaptiveMedias(
+		List<AdaptiveMedia<AMProcessor<FileVersion, AMProcessor>>>
+			adaptiveMedias = _amImageFinder.getAdaptiveMedias(
 				amImageQueryBuilder -> amImageQueryBuilder.forFileVersion(
 					fileVersion
 				).forConfiguration(
@@ -144,9 +145,10 @@ public class AMImageRequestHandler
 		}
 	}
 
-	private AdaptiveMedia<AMImageProcessor> _getAdaptiveMedia(
-		FileVersion fileVersion,
-		AMImageAttributeMapping amImageAttributeMapping) {
+	private AdaptiveMedia<AMProcessor<FileVersion, AMProcessor>>
+		_getAdaptiveMedia(
+			FileVersion fileVersion,
+			AMImageAttributeMapping amImageAttributeMapping) {
 
 		try {
 			String configurationUuid = amImageAttributeMapping.getValue(
@@ -164,8 +166,8 @@ public class AMImageRequestHandler
 				return null;
 			}
 
-			AdaptiveMedia<AMImageProcessor> adaptiveMedia = _findAdaptiveMedia(
-				fileVersion, amImageConfigurationEntry);
+			AdaptiveMedia<AMProcessor<FileVersion, AMProcessor>> adaptiveMedia =
+				_findAdaptiveMedia(fileVersion, amImageConfigurationEntry);
 
 			if (adaptiveMedia != null) {
 				return adaptiveMedia;
@@ -178,15 +180,16 @@ public class AMImageRequestHandler
 		}
 	}
 
-	private Comparator<AdaptiveMedia<AMImageProcessor>> _getComparator(
-		Integer configurationWidth) {
+	private Comparator<AdaptiveMedia<AMProcessor<FileVersion, AMProcessor>>>
+		_getComparator(Integer configurationWidth) {
 
 		return Comparator.comparingInt(
 			adaptiveMedia -> _getDistance(configurationWidth, adaptiveMedia));
 	}
 
 	private Integer _getDistance(
-		int width, AdaptiveMedia<AMImageProcessor> adaptiveMedia) {
+		int width,
+		AdaptiveMedia<AMProcessor<FileVersion, AMProcessor>> adaptiveMedia) {
 
 		Integer imageWidth = adaptiveMedia.getValue(
 			AMImageAttribute.AM_IMAGE_ATTRIBUTE_WIDTH);
@@ -249,7 +252,8 @@ public class AMImageRequestHandler
 	}
 
 	private void _processAMImage(
-		AdaptiveMedia<AMImageProcessor> adaptiveMedia, FileVersion fileVersion,
+		AdaptiveMedia<AMProcessor<FileVersion, AMProcessor>> adaptiveMedia,
+		FileVersion fileVersion,
 		AMImageAttributeMapping amImageAttributeMapping) {
 
 		String adaptiveMediaConfigurationUuid = adaptiveMedia.getValue(

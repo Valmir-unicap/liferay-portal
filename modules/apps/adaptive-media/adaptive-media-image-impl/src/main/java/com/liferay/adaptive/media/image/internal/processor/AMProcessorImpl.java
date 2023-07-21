@@ -18,7 +18,6 @@ import com.liferay.adaptive.media.exception.AMRuntimeException;
 import com.liferay.adaptive.media.image.configuration.AMImageConfigurationEntry;
 import com.liferay.adaptive.media.image.configuration.AMImageConfigurationHelper;
 import com.liferay.adaptive.media.image.model.AMImageEntry;
-import com.liferay.adaptive.media.image.processor.AMImageProcessor;
 import com.liferay.adaptive.media.image.scaler.AMImageScaledImage;
 import com.liferay.adaptive.media.image.scaler.AMImageScaler;
 import com.liferay.adaptive.media.image.scaler.AMImageScalerRegistry;
@@ -44,11 +43,11 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	property = "model.class.name=com.liferay.portal.kernel.repository.model.FileVersion",
-	service = {AMImageProcessor.class, AMProcessor.class}
+	service = AMProcessor.class
 )
-public final class AMImageProcessorImpl implements AMImageProcessor {
+public final class AMProcessorImpl
+	implements AMProcessor<FileVersion, AMProcessorImpl> {
 
-	@Override
 	public void cleanUp(FileVersion fileVersion) throws PortalException {
 		if (!_amImageValidator.isValid(fileVersion)) {
 			return;
@@ -57,7 +56,6 @@ public final class AMImageProcessorImpl implements AMImageProcessor {
 		_amImageEntryLocalService.deleteAMImageEntryFileVersion(fileVersion);
 	}
 
-	@Override
 	public void process(FileVersion fileVersion) throws PortalException {
 		if (!_amImageValidator.isProcessingSupported(fileVersion)) {
 			return;
@@ -74,7 +72,6 @@ public final class AMImageProcessorImpl implements AMImageProcessor {
 		}
 	}
 
-	@Override
 	public void process(FileVersion fileVersion, String configurationEntryUuid)
 		throws PortalException {
 

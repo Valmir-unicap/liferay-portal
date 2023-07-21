@@ -28,9 +28,9 @@ import com.liferay.adaptive.media.image.internal.processor.AMImage;
 import com.liferay.adaptive.media.image.mime.type.AMImageMimeTypeProvider;
 import com.liferay.adaptive.media.image.model.AMImageEntry;
 import com.liferay.adaptive.media.image.processor.AMImageAttribute;
-import com.liferay.adaptive.media.image.processor.AMImageProcessor;
 import com.liferay.adaptive.media.image.service.AMImageEntryLocalService;
 import com.liferay.adaptive.media.image.url.AMImageURLFactory;
+import com.liferay.adaptive.media.processor.AMProcessor;
 import com.liferay.petra.function.transform.TransformUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.repository.model.FileVersion;
@@ -59,10 +59,13 @@ import org.osgi.service.component.annotations.Reference;
 public class AMImageFinderImpl implements AMImageFinder {
 
 	@Override
-	public List<AdaptiveMedia<AMImageProcessor>> getAdaptiveMedias(
-			Function
-				<AMImageQueryBuilder, AMQuery<FileVersion, AMImageProcessor>>
-					amImageQueryBuilderFunction)
+	public List<AdaptiveMedia<AMProcessor<FileVersion, AMProcessor>>>
+			getAdaptiveMedias(
+				Function
+					<AMImageQueryBuilder,
+					 AMQuery
+						 <FileVersion, AMProcessor<FileVersion, AMProcessor>>>
+							amImageQueryBuilderFunction)
 		throws PortalException {
 
 		if (amImageQueryBuilderFunction == null) {
@@ -73,7 +76,7 @@ public class AMImageFinderImpl implements AMImageFinder {
 		AMImageQueryBuilderImpl amImageQueryBuilderImpl =
 			new AMImageQueryBuilderImpl();
 
-		AMQuery<FileVersion, AMImageProcessor> amQuery =
+		AMQuery<FileVersion, AMProcessor<FileVersion, AMProcessor>> amQuery =
 			amImageQueryBuilderFunction.apply(amImageQueryBuilderImpl);
 
 		if (amQuery != AMImageQueryBuilderImpl.AM_QUERY) {
@@ -109,8 +112,8 @@ public class AMImageFinderImpl implements AMImageFinder {
 		Predicate<AMImageConfigurationEntry> filter =
 			amImageQueryBuilderImpl.getConfigurationEntryFilter();
 
-		List<AdaptiveMedia<AMImageProcessor>> adaptiveMedias =
-			TransformUtil.transform(
+		List<AdaptiveMedia<AMProcessor<FileVersion, AMProcessor>>>
+			adaptiveMedias = TransformUtil.transform(
 				amImageConfigurationEntries,
 				amImageConfigurationEntry -> {
 					if (filter.test(amImageConfigurationEntry) &&
@@ -124,16 +127,17 @@ public class AMImageFinderImpl implements AMImageFinder {
 					return null;
 				});
 
-		AMDistanceComparator<AdaptiveMedia<AMImageProcessor>>
-			amDistanceComparator =
-				amImageQueryBuilderImpl.getAMDistanceComparator();
+		AMDistanceComparator
+			<AdaptiveMedia<AMProcessor<FileVersion, AMProcessor>>>
+				amDistanceComparator =
+					amImageQueryBuilderImpl.getAMDistanceComparator();
 
 		adaptiveMedias.sort(amDistanceComparator.toComparator());
 
 		return adaptiveMedias;
 	}
 
-	private AdaptiveMedia<AMImageProcessor> _createMedia(
+	private AdaptiveMedia<AMProcessor<FileVersion, AMProcessor>> _createMedia(
 		FileVersion fileVersion,
 		BiFunction<FileVersion, AMImageConfigurationEntry, URI> uriFactory,
 		AMImageConfigurationEntry amImageConfigurationEntry) {
@@ -159,15 +163,17 @@ public class AMImageFinderImpl implements AMImageFinder {
 			fileVersion.getFileVersionId());
 
 		if (amImageEntry != null) {
-			AMAttribute<AMImageProcessor, Integer> imageHeightAMAttribute =
-				AMImageAttribute.AM_IMAGE_ATTRIBUTE_HEIGHT;
+			AMAttribute<AMProcessor<FileVersion, AMProcessor>, Integer>
+				imageHeightAMAttribute =
+					AMImageAttribute.AM_IMAGE_ATTRIBUTE_HEIGHT;
 
 			properties.put(
 				imageHeightAMAttribute.getName(),
 				String.valueOf(amImageEntry.getHeight()));
 
-			AMAttribute<AMImageProcessor, Integer> imageWidthAMAttribute =
-				AMImageAttribute.AM_IMAGE_ATTRIBUTE_WIDTH;
+			AMAttribute<AMProcessor<FileVersion, AMProcessor>, Integer>
+				imageWidthAMAttribute =
+					AMImageAttribute.AM_IMAGE_ATTRIBUTE_WIDTH;
 
 			properties.put(
 				imageWidthAMAttribute.getName(),
@@ -197,8 +203,8 @@ public class AMImageFinderImpl implements AMImageFinder {
 			uriFactory.apply(fileVersion, amImageConfigurationEntry));
 	}
 
-	private AdaptiveMedia<AMImageProcessor> _createRawAdaptiveMedia(
-		FileVersion fileVersion) {
+	private AdaptiveMedia<AMProcessor<FileVersion, AMProcessor>>
+		_createRawAdaptiveMedia(FileVersion fileVersion) {
 
 		return new AMImage(
 			() -> {

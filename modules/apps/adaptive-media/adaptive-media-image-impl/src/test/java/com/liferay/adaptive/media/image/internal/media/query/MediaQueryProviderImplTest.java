@@ -27,8 +27,8 @@ import com.liferay.adaptive.media.image.internal.processor.AMImage;
 import com.liferay.adaptive.media.image.media.query.Condition;
 import com.liferay.adaptive.media.image.media.query.MediaQuery;
 import com.liferay.adaptive.media.image.processor.AMImageAttribute;
-import com.liferay.adaptive.media.image.processor.AMImageProcessor;
 import com.liferay.adaptive.media.image.url.AMImageURLFactory;
+import com.liferay.adaptive.media.processor.AMProcessor;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.repository.model.FileEntry;
@@ -641,7 +641,8 @@ public class MediaQueryProviderImplTest {
 
 	private void _addAdaptiveMedias(
 			FileEntry fileEntry,
-			AdaptiveMedia<AMImageProcessor>... adaptiveMedias)
+			AdaptiveMedia<AMProcessor<FileVersion, AMProcessor>>...
+				adaptiveMedias)
 		throws Exception {
 
 		Mockito.when(
@@ -662,8 +663,8 @@ public class MediaQueryProviderImplTest {
 					return Collections.emptyList();
 				}
 
-				for (AdaptiveMedia<AMImageProcessor> adaptiveMedia :
-						adaptiveMedias) {
+				for (AdaptiveMedia<AMProcessor<FileVersion, AMProcessor>>
+						adaptiveMedia : adaptiveMedias) {
 
 					String configurationUuid = adaptiveMedia.getValue(
 						AMAttribute.getConfigurationUuidAMAttribute());
@@ -727,9 +728,10 @@ public class MediaQueryProviderImplTest {
 		_assertCondition(conditions.get(1), "min-width", minWidth + "px");
 	}
 
-	private AdaptiveMedia<AMImageProcessor> _createAdaptiveMedia(
-			String amImageConfigurationEntryUuid, int height, int width,
-			String url)
+	private AdaptiveMedia<AMProcessor<FileVersion, AMProcessor>>
+			_createAdaptiveMedia(
+				String amImageConfigurationEntryUuid, int height, int width,
+				String url)
 		throws Exception {
 
 		Map<String, String> properties = HashMapBuilder.put(
