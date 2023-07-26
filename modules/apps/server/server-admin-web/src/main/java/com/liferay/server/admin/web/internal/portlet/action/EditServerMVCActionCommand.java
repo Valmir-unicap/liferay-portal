@@ -137,10 +137,10 @@ import org.osgi.service.component.annotations.Reference;
 		"javax.portlet.name=" + PortletKeys.SERVER_ADMIN,
 		"mvc.command.name=/server_admin/edit_server"
 	},
-	service = {IdentifiableOSGiService.class, MVCActionCommand.class}
+	service = {MVCActionCommand.class}
 )
 public class EditServerMVCActionCommand
-	extends BaseMVCActionCommand implements IdentifiableOSGiService {
+	extends BaseMVCActionCommand implements MVCActionCommand {
 
 	@Override
 	public void doProcessAction(
@@ -244,11 +244,6 @@ public class EditServerMVCActionCommand
 		}
 
 		sendRedirect(actionRequest, actionResponse, redirect);
-	}
-
-	@Override
-	public String getOSGiServiceIdentifier() {
-		return EditServerMVCActionCommand.class.getName();
 	}
 
 	private static void _resetLogLevels(
@@ -712,7 +707,7 @@ public class EditServerMVCActionCommand
 			_clusterMasterExecutor.executeOnMaster(
 				new MethodHandler(
 					_updateLogLevelsMethodKey, logLevels,
-					getOSGiServiceIdentifier()));
+					_editServerIdentifiableOSGIService.getOSGiServiceIdentifier()));
 		}
 	}
 
@@ -947,5 +942,7 @@ public class EditServerMVCActionCommand
 
 	@Reference
 	private VideoProcessor _videoProcessor;
+	@Reference
+	private EditServerIdentifiableOSGIService _editServerIdentifiableOSGIService;
 
 }
