@@ -14,10 +14,17 @@ import com.liferay.configuration.admin.web.internal.util.ResourceBundleLoaderPro
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClassDefinition;
+import com.liferay.portal.kernel.cluster.ClusterExecutor;
+import com.liferay.portal.kernel.cluster.ClusterMasterExecutor;
+import com.liferay.portal.kernel.cluster.ClusterMasterTokenTransitionListener;
+import com.liferay.portal.kernel.cluster.ClusterRequest;
+import com.liferay.portal.kernel.concurrent.NoticeableFuture;
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.CompanyConstants;
+import com.liferay.portal.kernel.module.framework.service.IdentifiableOSGiService;
+import com.liferay.portal.kernel.module.framework.service.IdentifiableOSGiServiceUtil;
 import com.liferay.portal.kernel.resource.bundle.ResourceBundleLoader;
 import com.liferay.portal.kernel.search.BaseIndexer;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
@@ -34,6 +41,8 @@ import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.MethodHandler;
+import com.liferay.portal.kernel.util.MethodKey;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.index.IndexStatusManager;
@@ -47,14 +56,17 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.metatype.AttributeDefinition;
 import org.osgi.service.metatype.ObjectClassDefinition;
@@ -66,9 +78,10 @@ import org.osgi.util.tracker.BundleTrackerCustomizer;
  */
 @Component(
 	property = {"index.on.startup=false", "system.index=true"},
-	service = {ConfigurationModelIndexer.class, Indexer.class}
+	service = Indexer.class
 )
-public class ConfigurationModelIndexer extends BaseIndexer<ConfigurationModel> {
+public class ConfigurationModelIndexer
+	extends BaseIndexer<ConfigurationModel> implements IdentifiableOSGiService {
 
 	@Override
 	public String getClassName() {
@@ -98,6 +111,10 @@ public class ConfigurationModelIndexer extends BaseIndexer<ConfigurationModel> {
 		catch (Exception exception) {
 			throw new SearchException(exception);
 		}
+	}
+
+	public String getOSGiServiceIdentifier() {
+		return ConfigurationModelIndexer.class.getName();
 	}
 
 	public BundleTracker<Collection<ConfigurationModel>> initialize() {
@@ -185,6 +202,39 @@ public class ConfigurationModelIndexer extends BaseIndexer<ConfigurationModel> {
 		}
 	}
 
+	public void startInitialize() throws PortletException {
+		if (_initialized) {
+			return;
+		}
+
+		synchronized (this) {
+			if (_initialized) {
+				return;
+			}
+
+			if (_clusterMasterExecutor.isMaster()) {
+				_bundleTracker = initialize();
+			}
+			else {
+				NoticeableFuture<Void> noticeableFuture =
+					_clusterMasterExecutor.executeOnMaster(
+						new MethodHandler(
+							_initializeMethodKey, getOSGiServiceIdentifier()));
+
+				try {
+					noticeableFuture.get();
+				}
+				catch (Exception exception) {
+					throw new PortletException(
+						"Unable to initialize configuration model index",
+						exception);
+				}
+			}
+
+			_initialized = true;
+		}
+	}
+
 	@Activate
 	protected void activate(BundleContext bundleContext) {
 		setCommitImmediately(false);
@@ -201,6 +251,18 @@ public class ConfigurationModelIndexer extends BaseIndexer<ConfigurationModel> {
 		setStagingAware(false);
 
 		_bundleContext = bundleContext;
+
+		_destinationServiceRegistration = _bundleContext.registerService(
+			IdentifiableOSGiService.class, new ConfigurationModelIndexer(),
+			null);
+
+		if (_clusterExecutor.isEnabled()) {
+			_configurationModelsClusterMasterTokenTransitionListener =
+				new ConfigurationModelsClusterMasterTokenTransitionListener();
+
+			_clusterMasterExecutor.addClusterMasterTokenTransitionListener(
+				_configurationModelsClusterMasterTokenTransitionListener);
+		}
 	}
 
 	@Override
@@ -238,6 +300,17 @@ public class ConfigurationModelIndexer extends BaseIndexer<ConfigurationModel> {
 		fullBooleanQuery.add(searchQuery, BooleanClauseOccur.MUST);
 
 		return fullBooleanQuery;
+	}
+
+	@Deactivate
+	protected void deactivate() {
+		if (_configurationModelsClusterMasterTokenTransitionListener != null) {
+			_clusterMasterExecutor.removeClusterMasterTokenTransitionListener(
+				_configurationModelsClusterMasterTokenTransitionListener);
+		}
+
+		_destinationServiceRegistration.unregister();
+		_stopBundleTracker();
 	}
 
 	@Override
@@ -371,6 +444,26 @@ public class ConfigurationModelIndexer extends BaseIndexer<ConfigurationModel> {
 		}
 	}
 
+	private static void _initialize(String osgiServiceIdentifier)
+		throws Exception {
+
+		ConfigurationModelIndexer configurationModelIndexer =
+			(ConfigurationModelIndexer)
+				IdentifiableOSGiServiceUtil.getIdentifiableOSGiService(
+					osgiServiceIdentifier);
+
+		configurationModelIndexer.initialize();
+	}
+
+	private static void _reset(String osgiServiceIdentifier) {
+		ConfigurationModelIndexer configurationModelIndexer =
+			(ConfigurationModelIndexer)
+				IdentifiableOSGiServiceUtil.getIdentifiableOSGiService(
+					osgiServiceIdentifier);
+
+		configurationModelIndexer._initialized = false;
+	}
+
 	private void _addLocalizedText(
 		Document document, ResourceBundleLoader resourceBundleLoader,
 		List<TranslationHelper> translationHelpers) {
@@ -461,10 +554,30 @@ public class ConfigurationModelIndexer extends BaseIndexer<ConfigurationModel> {
 			configurationModel.getFactoryPid());
 	}
 
+	private synchronized void _stopBundleTracker() {
+		if (_bundleTracker != null) {
+			_bundleTracker.close();
+
+			_bundleTracker = null;
+		}
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		ConfigurationModelIndexer.class);
 
+	private static final MethodKey _initializeMethodKey = new MethodKey(
+		ConfigurationModelIndexer.class, "_initialize", String.class);
+	private static final MethodKey _resetMethodKey = new MethodKey(
+		ConfigurationModelIndexer.class, "_reset", String.class);
+
 	private BundleContext _bundleContext;
+	private BundleTracker<Collection<ConfigurationModel>> _bundleTracker;
+
+	@Reference
+	private ClusterExecutor _clusterExecutor;
+
+	@Reference
+	private ClusterMasterExecutor _clusterMasterExecutor;
 
 	@Reference
 	private ConfigurationEntryRetriever _configurationEntryRetriever;
@@ -472,11 +585,19 @@ public class ConfigurationModelIndexer extends BaseIndexer<ConfigurationModel> {
 	@Reference(target = "(!(filter.visibility=*))")
 	private ConfigurationModelRetriever _configurationModelRetriever;
 
+	private ConfigurationModelIndexer.
+		ConfigurationModelsClusterMasterTokenTransitionListener
+			_configurationModelsClusterMasterTokenTransitionListener;
+	private ServiceRegistration<IdentifiableOSGiService>
+		_destinationServiceRegistration;
+
 	@Reference
 	private IndexStatusManager _indexStatusManager;
 
 	@Reference
 	private IndexWriterHelper _indexWriterHelper;
+
+	private volatile boolean _initialized;
 
 	@Reference
 	private Language _language;
@@ -572,6 +693,31 @@ public class ConfigurationModelIndexer extends BaseIndexer<ConfigurationModel> {
 
 		private final Map<String, Collection<ConfigurationModel>>
 			_configurationModelsMap;
+
+	}
+
+	private class ConfigurationModelsClusterMasterTokenTransitionListener
+		implements ClusterMasterTokenTransitionListener {
+
+		@Override
+		public void masterTokenAcquired() {
+			_initialized = false;
+
+			ClusterRequest clusterRequest =
+				ClusterRequest.createMulticastRequest(
+					new MethodHandler(
+						_resetMethodKey, getOSGiServiceIdentifier()),
+					true);
+
+			clusterRequest.setFireAndForget(true);
+
+			_clusterExecutor.execute(clusterRequest);
+		}
+
+		@Override
+		public void masterTokenReleased() {
+			_stopBundleTracker();
+		}
 
 	}
 
