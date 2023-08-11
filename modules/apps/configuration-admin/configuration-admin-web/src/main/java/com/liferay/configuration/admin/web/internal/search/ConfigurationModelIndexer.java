@@ -192,6 +192,8 @@ public class ConfigurationModelIndexer
 
 			processHits(searchContext, hits);
 
+			startInitialize();
+
 			return hits;
 		}
 		catch (SearchException searchException) {
