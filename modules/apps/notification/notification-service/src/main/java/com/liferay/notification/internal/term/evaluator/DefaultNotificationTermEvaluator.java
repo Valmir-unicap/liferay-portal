@@ -15,7 +15,7 @@ import org.osgi.service.component.annotations.Component;
 /**
  * @author Feliphe Marinho
  */
-@Component(service = DefaultNotificationTermEvaluator.class)
+@Component(service = NotificationTermEvaluator.class)
 public class DefaultNotificationTermEvaluator
 	implements NotificationTermEvaluator {
 

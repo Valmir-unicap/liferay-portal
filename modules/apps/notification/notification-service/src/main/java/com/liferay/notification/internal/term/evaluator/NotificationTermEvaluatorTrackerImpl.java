@@ -82,8 +82,10 @@ public class NotificationTermEvaluatorTrackerImpl
 		return notificationTermEvaluators;
 	}
 
-	@Reference
-	private DefaultNotificationTermEvaluator _defaultNotificationTermEvaluator;
+	@Reference(
+		target = "(component.name=com.liferay.notification.internal.term.evaluator.DefaultNotificationTermEvaluator)"
+	)
+	private NotificationTermEvaluator _defaultNotificationTermEvaluator;
 
 	private ServiceTrackerMap
 		<String,
