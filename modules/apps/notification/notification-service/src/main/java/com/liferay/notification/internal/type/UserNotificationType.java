@@ -9,7 +9,7 @@ import com.liferay.notification.constants.NotificationConstants;
 import com.liferay.notification.constants.NotificationQueueEntryConstants;
 import com.liferay.notification.context.NotificationContext;
 import com.liferay.notification.internal.type.users.provider.UsersProvider;
-import com.liferay.notification.internal.type.users.provider.UsersProviderTracker;
+import com.liferay.notification.internal.type.users.provider.UsersProviderTrackerUtil;
 import com.liferay.notification.model.NotificationQueueEntry;
 import com.liferay.notification.model.NotificationRecipient;
 import com.liferay.notification.model.NotificationRecipientSetting;
@@ -94,9 +94,8 @@ public class UserNotificationType extends BaseNotificationType {
 		NotificationTemplate notificationTemplate =
 			notificationContext.getNotificationTemplate();
 
-		UsersProvider usersProvider =
-			_usersProviderServiceTracker.getUsersProvider(
-				notificationTemplate.getRecipientType());
+		UsersProvider usersProvider = UsersProviderTrackerUtil.getUsersProvider(
+			notificationTemplate.getRecipientType());
 
 		for (User user : usersProvider.provide(notificationContext)) {
 			if (!_objectEntryService.hasModelResourcePermission(
@@ -153,8 +152,5 @@ public class UserNotificationType extends BaseNotificationType {
 	@Reference
 	private UserNotificationEventLocalService
 		_userNotificationEventLocalService;
-
-	@Reference
-	private UsersProviderTracker _usersProviderServiceTracker;
 
 }

@@ -8,32 +8,29 @@ package com.liferay.notification.internal.type.users.provider;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
 
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.framework.FrameworkUtil;
 
 /**
  * @author Feliphe Marinho
  */
-@Component(service = UsersProviderTracker.class)
-public class UsersProviderTracker {
+public class UsersProviderTrackerUtil {
 
-	public UsersProvider getUsersProvider(String recipientType) {
+	public static UsersProvider getUsersProvider(String recipientType) {
 		return _serviceTrackerMap.getService(recipientType);
 	}
 
-	@Activate
-	protected void activate(BundleContext bundleContext) {
+	private static final ServiceTrackerMap<String, UsersProvider>
+		_serviceTrackerMap;
+
+	static {
+		Bundle bundle = FrameworkUtil.getBundle(UsersProviderTrackerUtil.class);
+
+		BundleContext bundleContext = bundle.getBundleContext();
+
 		_serviceTrackerMap = ServiceTrackerMapFactory.openSingleValueMap(
 			bundleContext, UsersProvider.class, "recipient.type");
 	}
-
-	@Deactivate
-	protected void deactivate() {
-		_serviceTrackerMap.close();
-	}
-
-	private ServiceTrackerMap<String, UsersProvider> _serviceTrackerMap;
 
 }
