@@ -14,7 +14,7 @@ import com.liferay.object.model.ObjectRelationship;
 import com.liferay.object.odata.filter.expression.field.predicate.provider.FieldPredicateProvider;
 import com.liferay.object.related.models.ObjectRelatedModelsPredicateProvider;
 import com.liferay.object.related.models.ObjectRelatedModelsPredicateProviderRegistry;
-import com.liferay.object.rest.internal.odata.filter.expression.field.predicate.provider.FieldPredicateProviderTracker;
+import com.liferay.object.rest.internal.filter.factory.DefaultFilterFactoryImpl;
 import com.liferay.object.rest.internal.util.BinaryExpressionConverterUtil;
 import com.liferay.object.rest.odata.entity.v1_0.provider.EntityModelProvider;
 import com.liferay.object.service.ObjectDefinitionLocalServiceUtil;
@@ -83,7 +83,7 @@ public class PredicateExpressionVisitorImpl
 
 	public PredicateExpressionVisitorImpl(
 		EntityModel entityModel, EntityModelProvider entityModelProvider,
-		FieldPredicateProviderTracker fieldPredicateProviderTracker,
+		DefaultFilterFactoryImpl defaultFilterFactoryImpl,
 		ObjectDefinition objectDefinition,
 		ObjectFieldBusinessTypeRegistry objectFieldBusinessTypeRegistry,
 		ObjectFieldLocalService objectFieldLocalService,
@@ -91,7 +91,7 @@ public class PredicateExpressionVisitorImpl
 			objectRelatedModelsPredicateProviderRegistry) {
 
 		this(
-			entityModel, entityModelProvider, fieldPredicateProviderTracker,
+			entityModel, entityModelProvider, defaultFilterFactoryImpl,
 			new HashMap<>(), objectDefinition, objectFieldBusinessTypeRegistry,
 			objectFieldLocalService,
 			objectRelatedModelsPredicateProviderRegistry);
@@ -342,7 +342,7 @@ public class PredicateExpressionVisitorImpl
 
 	private PredicateExpressionVisitorImpl(
 		EntityModel entityModel, EntityModelProvider entityModelProvider,
-		FieldPredicateProviderTracker fieldPredicateProviderTracker,
+		DefaultFilterFactoryImpl defaultFilterFactoryImpl,
 		Map<String, String> lambdaVariableExpressionFieldNames,
 		ObjectDefinition objectDefinition,
 		ObjectFieldBusinessTypeRegistry objectFieldBusinessTypeRegistry,
@@ -353,7 +353,7 @@ public class PredicateExpressionVisitorImpl
 		_entityModels.put(
 			objectDefinition.getObjectDefinitionId(), entityModel);
 		_entityModelProvider = entityModelProvider;
-		_fieldPredicateProviderTracker = fieldPredicateProviderTracker;
+		_defaultFilterFactoryImpl = defaultFilterFactoryImpl;
 		_lambdaVariableExpressionFieldNames =
 			lambdaVariableExpressionFieldNames;
 		_objectDefinition = objectDefinition;
@@ -372,7 +372,7 @@ public class PredicateExpressionVisitorImpl
 		ObjectDefinition objectDefinition) {
 
 		FieldPredicateProvider fieldPredicateProvider =
-			_fieldPredicateProviderTracker.getFieldPredicateProvider(
+			_defaultFilterFactoryImpl.getFieldPredicateProvider(
 				String.valueOf(fieldName));
 
 		if (fieldPredicateProvider != null) {
@@ -435,7 +435,7 @@ public class PredicateExpressionVisitorImpl
 		Object left, ObjectDefinition objectDefinition, List<Object> rights) {
 
 		FieldPredicateProvider fieldPredicateProvider =
-			_fieldPredicateProviderTracker.getFieldPredicateProvider(
+			_defaultFilterFactoryImpl.getFieldPredicateProvider(
 				String.valueOf(left));
 
 		if (fieldPredicateProvider != null) {
@@ -593,7 +593,7 @@ public class PredicateExpressionVisitorImpl
 
 			if (objectField == null) {
 				FieldPredicateProvider fieldPredicateProvider =
-					_fieldPredicateProviderTracker.getFieldPredicateProvider(
+					_defaultFilterFactoryImpl.getFieldPredicateProvider(
 						String.valueOf(left));
 
 				if (fieldPredicateProvider != null) {
@@ -754,7 +754,7 @@ public class PredicateExpressionVisitorImpl
 		ObjectDefinition objectDefinition) {
 
 		FieldPredicateProvider fieldPredicateProvider =
-			_fieldPredicateProviderTracker.getFieldPredicateProvider(
+			_defaultFilterFactoryImpl.getFieldPredicateProvider(
 				String.valueOf(fieldName));
 
 		if (fieldPredicateProvider != null) {
@@ -778,7 +778,7 @@ public class PredicateExpressionVisitorImpl
 		return (Predicate)lambdaFunctionExpression.accept(
 			new PredicateExpressionVisitorImpl(
 				_getObjectDefinitionEntityModel(objectDefinition),
-				_entityModelProvider, _fieldPredicateProviderTracker,
+				_entityModelProvider, _defaultFilterFactoryImpl,
 				Collections.singletonMap(
 					lambdaFunctionExpression.getVariableName(),
 					collectionPropertyExpression.getName()),
@@ -790,9 +790,9 @@ public class PredicateExpressionVisitorImpl
 	private static final Log _log = LogFactoryUtil.getLog(
 		PredicateExpressionVisitorImpl.class);
 
+	private DefaultFilterFactoryImpl _defaultFilterFactoryImpl;
 	private EntityModelProvider _entityModelProvider;
 	private final Map<Long, EntityModel> _entityModels = new HashMap<>();
-	private FieldPredicateProviderTracker _fieldPredicateProviderTracker;
 	private final Map<String, String> _lambdaVariableExpressionFieldNames;
 	private final ObjectDefinition _objectDefinition;
 	private final ObjectFieldBusinessTypeRegistry
