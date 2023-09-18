@@ -6,6 +6,8 @@
 package com.liferay.saml.opensaml.integration.internal.resolver;
 
 import com.liferay.expando.kernel.model.ExpandoBridge;
+import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
+import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
 import com.liferay.petra.function.transform.TransformUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
@@ -21,6 +23,7 @@ import com.liferay.portal.kernel.model.UserGroup;
 import com.liferay.portal.kernel.model.UserGroupGroupRole;
 import com.liferay.portal.kernel.model.UserGroupRole;
 import com.liferay.portal.kernel.model.role.RoleConstants;
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.RoleLocalService;
 import com.liferay.portal.kernel.service.UserGroupGroupRoleLocalService;
@@ -45,8 +48,12 @@ import java.util.Set;
 import org.opensaml.saml.common.xml.SAMLConstants;
 import org.opensaml.saml.saml2.core.Attribute;
 
+import org.osgi.framework.BundleContext;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Mika Koivisto
@@ -57,6 +64,26 @@ import org.osgi.service.component.annotations.Reference;
 	service = AttributeResolver.class
 )
 public class DefaultAttributeResolver implements AttributeResolver {
+
+	public AttributeResolver getAttributeResolver(String entityId) {
+		long companyId = CompanyThreadLocal.getCompanyId();
+
+		AttributeResolver attributeResolver = _serviceTrackerMap.getService(
+			companyId + "," + entityId);
+
+		if (attributeResolver == null) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(
+					StringBundler.concat(
+						"No attribute resolver for company ID ", companyId,
+						" and entity ID ", entityId));
+			}
+
+			attributeResolver = _defaultAttributeResolver;
+		}
+
+		return attributeResolver;
+	}
 
 	@Override
 	public void resolve(
@@ -121,6 +148,18 @@ public class DefaultAttributeResolver implements AttributeResolver {
 			_addSalesForceAttributes(
 				attributeResolverSAMLContext, attributePublisher);
 		}
+	}
+
+	@Activate
+	protected void activate(BundleContext bundleContext) {
+		_serviceTrackerMap = ServiceTrackerMapFactory.openSingleValueMap(
+			bundleContext, AttributeResolver.class, "(companyId=*)",
+			new DefaultServiceReferenceMapper(_log));
+	}
+
+	@Deactivate
+	protected void deactivate() {
+		_serviceTrackerMap.close();
 	}
 
 	protected String[] getAttributeNames(String entityId) {
@@ -639,6 +678,11 @@ public class DefaultAttributeResolver implements AttributeResolver {
 	@Reference
 	private BeanProperties _beanProperties;
 
+	@Reference(
+		policyOption = ReferencePolicyOption.GREEDY, target = "(!(companyId=*))"
+	)
+	private AttributeResolver _defaultAttributeResolver;
+
 	@Reference
 	private GroupLocalService _groupLocalService;
 
@@ -647,6 +691,8 @@ public class DefaultAttributeResolver implements AttributeResolver {
 
 	@Reference
 	private RoleLocalService _roleLocalService;
+
+	private ServiceTrackerMap<String, AttributeResolver> _serviceTrackerMap;
 
 	@Reference
 	private UserGroupGroupRoleLocalService _userGroupGroupRoleLocalService;

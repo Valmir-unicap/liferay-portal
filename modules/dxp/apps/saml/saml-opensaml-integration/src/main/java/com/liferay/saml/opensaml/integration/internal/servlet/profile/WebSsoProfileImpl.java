@@ -32,10 +32,8 @@ import com.liferay.saml.opensaml.integration.internal.binding.SamlBinding;
 import com.liferay.saml.opensaml.integration.internal.bootstrap.ParserPoolUtil;
 import com.liferay.saml.opensaml.integration.internal.metadata.MetadataManager;
 import com.liferay.saml.opensaml.integration.internal.resolver.AttributePublisherImpl;
-import com.liferay.saml.opensaml.integration.internal.resolver.AttributeResolverRegistry;
 import com.liferay.saml.opensaml.integration.internal.resolver.AttributeResolverSAMLContextImpl;
 import com.liferay.saml.opensaml.integration.internal.resolver.DecrypterContext;
-import com.liferay.saml.opensaml.integration.internal.resolver.NameIdResolverRegistry;
 import com.liferay.saml.opensaml.integration.internal.resolver.NameIdResolverSAMLContextImpl;
 import com.liferay.saml.opensaml.integration.internal.resolver.SubjectAssertionContext;
 import com.liferay.saml.opensaml.integration.internal.resolver.UserResolverSAMLContextImpl;
@@ -1326,7 +1324,7 @@ public class WebSsoProfileImpl extends BaseProfile implements WebSsoProfile {
 		User user = samlSsoRequestContext.getUser();
 
 		AttributeResolver attributeResolver =
-			_attributeResolverRegistry.getAttributeResolver(
+			_defaultAttributeResolver.getAttributeResolver(
 				samlPeerEntityContext.getEntityId());
 
 		AttributePublisherImpl attributePublisherImpl =
@@ -1401,7 +1399,7 @@ public class WebSsoProfileImpl extends BaseProfile implements WebSsoProfile {
 			messageContext.getSubcontext(SAMLPeerEntityContext.class);
 
 		NameIdResolver nameIdResolver =
-			_nameIdResolverRegistry.getNameIdResolver(
+			_defaultNameIdResolver.getNameIdResolver(
 				samlPeerEntityContext.getEntityId());
 
 		boolean allowCreate = false;
@@ -2107,17 +2105,21 @@ public class WebSsoProfileImpl extends BaseProfile implements WebSsoProfile {
 	private static final SAMLSignatureProfileValidator
 		_samlSignatureProfileValidator = new SAMLSignatureProfileValidator();
 
-	@Reference
-	private AttributeResolverRegistry _attributeResolverRegistry;
-
 	private final DCLSingleton<Decrypter> _decrypterDCLSingleton =
 		new DCLSingleton<>();
 
-	@Reference
-	private MetadataManager _metadataManager;
+	@Reference(
+		target = "(component.name=com.liferay.saml.opensaml.integration.internal.resolver.DefaultAttributeResolver)"
+	)
+	private AttributeResolver _defaultAttributeResolver;
+
+	@Reference(
+		target = "(component.name=com.liferay.saml.opensaml.integration.internal.resolver.DefaultNameIdResolver)"
+	)
+	private NameIdResolver _defaultNameIdResolver;
 
 	@Reference
-	private NameIdResolverRegistry _nameIdResolverRegistry;
+	private MetadataManager _metadataManager;
 
 	@Reference
 	private RelayStateHelper _relayStateHelper;
