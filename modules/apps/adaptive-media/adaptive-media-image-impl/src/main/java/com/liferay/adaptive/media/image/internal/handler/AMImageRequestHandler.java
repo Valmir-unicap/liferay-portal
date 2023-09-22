@@ -285,7 +285,6 @@ public class AMImageRequestHandler
 	@Reference
 	private AMImageFinder _amImageFinder;
 
-	@Reference
 	private PathInterpreter _pathInterpreter;
 
 }
