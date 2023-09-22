@@ -70,7 +70,6 @@ public class SharingEntryInterpreterProviderImpl
 		return false;
 	}
 
-	@Reference
 	private AssetRendererSharingEntryInterpreter
 		_assetRendererSharingEntryInterpreter;
 

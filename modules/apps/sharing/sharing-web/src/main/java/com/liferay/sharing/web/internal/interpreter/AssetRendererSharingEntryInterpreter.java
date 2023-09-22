@@ -25,16 +25,32 @@ import java.util.Locale;
 
 import javax.servlet.ServletContext;
 
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-
 /**
  * @author Alejandro Tardín
  */
-@Component(service = AssetRendererSharingEntryInterpreter.class)
 public class AssetRendererSharingEntryInterpreter
 	implements SharingEntryInterpreter {
+
+	public AssetRendererSharingEntryInterpreter(
+		AssetEntryLocalService assetEntryLocalService,
+		AssetRendererSharingEntryEditRenderer
+			assetRendererSharingEntryEditRenderer,
+		AssetRendererSharingEntryViewRenderer
+			assetRendererSharingEntryViewRenderer,
+		ServletContext servletContext) {
+
+		_assetEntryLocalService = assetEntryLocalService;
+		_assetRendererSharingEntryEditRenderer =
+			assetRendererSharingEntryEditRenderer;
+		_assetRendererSharingEntryViewRenderer =
+			assetRendererSharingEntryViewRenderer;
+
+		assetRendererSharingEntryEditRenderer =
+			new AssetRendererSharingEntryEditRenderer();
+
+		assetRendererSharingEntryViewRenderer =
+			new AssetRendererSharingEntryViewRenderer(servletContext);
+	}
 
 	@Override
 	public String getAssetTypeTitle(SharingEntry sharingEntry, Locale locale)
@@ -108,26 +124,13 @@ public class AssetRendererSharingEntryInterpreter
 		return true;
 	}
 
-	@Activate
-	protected void activate() {
-		_assetRendererSharingEntryEditRenderer =
-			new AssetRendererSharingEntryEditRenderer();
-		_assetRendererSharingEntryViewRenderer =
-			new AssetRendererSharingEntryViewRenderer(_servletContext);
-	}
-
 	private static final Log _log = LogFactoryUtil.getLog(
 		AssetRendererSharingEntryInterpreter.class);
 
-	@Reference
-	private AssetEntryLocalService _assetEntryLocalService;
-
-	private AssetRendererSharingEntryEditRenderer
+	private final AssetEntryLocalService _assetEntryLocalService;
+	private final AssetRendererSharingEntryEditRenderer
 		_assetRendererSharingEntryEditRenderer;
-	private AssetRendererSharingEntryViewRenderer
+	private final AssetRendererSharingEntryViewRenderer
 		_assetRendererSharingEntryViewRenderer;
-
-	@Reference(target = "(osgi.web.symbolicname=com.liferay.sharing.web)")
-	private ServletContext _servletContext;
 
 }
