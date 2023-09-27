@@ -5,21 +5,31 @@
 
 package com.liferay.commerce.product.internal.configuration;
 
+import com.liferay.commerce.product.configuration.CPDefinitionLinkTypeConfiguration;
 import com.liferay.commerce.product.configuration.CPDefinitionLinkTypeSettings;
 import com.liferay.osgi.service.tracker.collections.map.ServiceReferenceMapperFactory;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
+import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
+
+import java.util.Map;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
 import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Modified;
 
 /**
  * @author Alessio Antonio Rendina
  */
-@Component(service = CPDefinitionLinkTypeSettings.class)
+@Component(
+	configurationPid = "com.liferay.commerce.product.configuration.CPDefinitionLinkTypeConfiguration",
+	configurationPolicy = ConfigurationPolicy.REQUIRE,
+	service = CPDefinitionLinkTypeSettings.class
+)
 public class CPDefinitionLinkTypeSettingsImpl
 	implements CPDefinitionLinkTypeSettings {
 
@@ -29,14 +39,17 @@ public class CPDefinitionLinkTypeSettingsImpl
 	}
 
 	@Activate
-	protected void activate(BundleContext bundleContext) {
+	protected void activate(
+		BundleContext bundleContext, Map<String, Object> properties) {
+
+		modified(properties);
+
 		_serviceTrackerMap = ServiceTrackerMapFactory.openSingleValueMap(
-			bundleContext, CPDefinitionLinkTypeConfigurationWrapper.class, null,
+			bundleContext, CPDefinitionLinkTypeSettingsImpl.class, null,
 			ServiceReferenceMapperFactory.create(
 				bundleContext,
-				(cpDefinitionLinkTypeConfigurationWrapper, emitter) ->
-					emitter.emit(
-						cpDefinitionLinkTypeConfigurationWrapper.getType())));
+				(cPDefinitionLinkTypeSettingsImpl, emitter) -> emitter.emit(
+					_cpDefinitionLinkTypeConfiguration.type())));
 	}
 
 	@Deactivate
@@ -44,7 +57,16 @@ public class CPDefinitionLinkTypeSettingsImpl
 		_serviceTrackerMap.close();
 	}
 
-	private ServiceTrackerMap<String, CPDefinitionLinkTypeConfigurationWrapper>
+	@Modified
+	protected void modified(Map<String, Object> properties) {
+		_cpDefinitionLinkTypeConfiguration =
+			ConfigurableUtil.createConfigurable(
+				CPDefinitionLinkTypeConfiguration.class, properties);
+	}
+
+	private volatile CPDefinitionLinkTypeConfiguration
+		_cpDefinitionLinkTypeConfiguration;
+	private volatile ServiceTrackerMap<String, CPDefinitionLinkTypeSettingsImpl>
 		_serviceTrackerMap;
 
 }
