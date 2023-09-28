@@ -38,7 +38,10 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Eudaldo Alonso
  */
-@Component(service = LayoutStructureItemMapper.class)
+@Component(
+	property = "layout.structure.item.mapper.type=formLayoutStructureItemMapper",
+	service = LayoutStructureItemMapper.class
+)
 public class FormLayoutStructureItemMapper
 	extends BaseStyledLayoutStructureItemMapper {
 
