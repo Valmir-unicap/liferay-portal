@@ -11,7 +11,6 @@ import com.liferay.dynamic.data.mapping.constants.DDMFormConstants;
 import com.liferay.dynamic.data.mapping.constants.DDMPortletKeys;
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldTemplateContextContributor;
 import com.liferay.dynamic.data.mapping.form.field.type.constants.DDMFormFieldTypeConstants;
-import com.liferay.dynamic.data.mapping.form.field.type.internal.security.permission.DDMPermissionCheckerRegistry;
 import com.liferay.dynamic.data.mapping.form.item.selector.criterion.DDMUserPersonalFolderItemSelectorCriterion;
 import com.liferay.dynamic.data.mapping.model.DDMFormField;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstance;
@@ -22,6 +21,8 @@ import com.liferay.item.selector.ItemSelector;
 import com.liferay.item.selector.ItemSelectorCriterion;
 import com.liferay.item.selector.criteria.FileEntryItemSelectorReturnType;
 import com.liferay.item.selector.criteria.file.criterion.FileItemSelectorCriterion;
+import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
+import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
 import com.liferay.petra.lang.SafeCloseable;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
@@ -77,7 +78,10 @@ import javax.portlet.ResourceURL;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.osgi.framework.BundleContext;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 
 /**
@@ -89,6 +93,21 @@ import org.osgi.service.component.annotations.Reference;
 )
 public class DocumentLibraryDDMFormFieldTemplateContextContributor
 	implements DDMFormFieldTemplateContextContributor {
+
+	public DDMPermissionChecker getDDMPermissionChecker(String portletId) {
+		DDMPermissionChecker ddmPermissionChecker =
+			_serviceTrackerMap.getService(portletId);
+
+		if (ddmPermissionChecker == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					"No dynamic data mapping permission checker found for " +
+						"portlet " + portletId);
+			}
+		}
+
+		return ddmPermissionChecker;
+	}
 
 	@Override
 	public Map<String, Object> getParameters(
@@ -147,6 +166,17 @@ public class DocumentLibraryDDMFormFieldTemplateContextContributor
 		).build();
 	}
 
+	@Activate
+	protected void activate(BundleContext bundleContext) {
+		_serviceTrackerMap = ServiceTrackerMapFactory.openSingleValueMap(
+			bundleContext, DDMPermissionChecker.class, "javax.portlet.name");
+	}
+
+	@Deactivate
+	protected void deactivate() {
+		_serviceTrackerMap.close();
+	}
+
 	protected ResourceBundle getResourceBundle(Locale locale) {
 		return new AggregateResourceBundle(
 			ResourceBundleUtil.getBundle(
@@ -166,9 +196,8 @@ public class DocumentLibraryDDMFormFieldTemplateContextContributor
 		PortletDisplay portletDisplay) {
 
 		try {
-			DDMPermissionChecker ddmPermissionChecker =
-				_ddmPermissionCheckerRegistry.getDDMPermissionChecker(
-					portletDisplay.getRootPortletId());
+			DDMPermissionChecker ddmPermissionChecker = getDDMPermissionChecker(
+				portletDisplay.getRootPortletId());
 
 			if (ddmPermissionChecker == null) {
 				return true;
@@ -733,14 +762,14 @@ public class DocumentLibraryDDMFormFieldTemplateContextContributor
 	private static final Log _log = LogFactoryUtil.getLog(
 		DocumentLibraryDDMFormFieldTemplateContextContributor.class);
 
+	private volatile ServiceTrackerMap<String, DDMPermissionChecker>
+		_serviceTrackerMap;
+
 	@Reference
 	private CompanyLocalService _companyLocalService;
 
 	@Reference
 	private DDMFormInstanceLocalService _ddmFormInstanceLocalService;
-
-	@Reference
-	private DDMPermissionCheckerRegistry _ddmPermissionCheckerRegistry;
 
 	@Reference
 	private DLAppLocalService _dlAppLocalService;

@@ -10,7 +10,6 @@ import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.dynamic.data.mapping.constants.DDMFormConstants;
 import com.liferay.dynamic.data.mapping.constants.DDMPortletKeys;
 import com.liferay.dynamic.data.mapping.form.field.type.BaseDDMFormFieldTypeSettingsTestCase;
-import com.liferay.dynamic.data.mapping.form.field.type.internal.security.permission.DDMPermissionCheckerRegistry;
 import com.liferay.dynamic.data.mapping.form.item.selector.criterion.DDMUserPersonalFolderItemSelectorCriterion;
 import com.liferay.dynamic.data.mapping.model.DDMFormField;
 import com.liferay.dynamic.data.mapping.render.DDMFormFieldRenderingContext;
@@ -592,12 +591,8 @@ public class DocumentLibraryDDMFormFieldTemplateContextContributorTest
 	}
 
 	private void _setUpDDMPermissionChecker() throws Exception {
-		DDMPermissionCheckerRegistry ddmPermissionCheckerRegistry =
-			Mockito.mock(DDMPermissionCheckerRegistry.class);
-
-		ReflectionTestUtil.setFieldValue(
-			_documentLibraryDDMFormFieldTemplateContextContributor,
-			"_ddmPermissionCheckerRegistry", ddmPermissionCheckerRegistry);
+		DocumentLibraryDDMFormFieldTemplateContextContributor documentLibraryDDMFormFieldTemplateContextContributor =
+			Mockito.mock(DocumentLibraryDDMFormFieldTemplateContextContributor.class);
 
 		Mockito.when(
 			_ddmPermissionChecker.containsPermission(
@@ -607,7 +602,7 @@ public class DocumentLibraryDDMFormFieldTemplateContextContributorTest
 		);
 
 		Mockito.when(
-			ddmPermissionCheckerRegistry.getDDMPermissionChecker(
+			documentLibraryDDMFormFieldTemplateContextContributor.getDDMPermissionChecker(
 				DDMPortletKeys.DYNAMIC_DATA_MAPPING_FORM)
 		).thenReturn(
 			_ddmPermissionChecker
