@@ -7,15 +7,22 @@ package com.liferay.commerce.frontend.internal.application;
 
 import com.liferay.commerce.frontend.internal.account.CommerceAccountResource;
 import com.liferay.commerce.frontend.internal.address.AddressResource;
-import com.liferay.commerce.frontend.internal.application.context.provider.ThemeDisplayContextProvider;
 import com.liferay.commerce.frontend.internal.cart.CommerceCartResource;
 import com.liferay.commerce.frontend.internal.search.CommerceSearchResource;
 import com.liferay.commerce.frontend.internal.wishlist.CommerceWishListResource;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+
 import javax.ws.rs.core.Application;
+import javax.ws.rs.ext.Provider;
+
+import org.apache.cxf.jaxrs.ext.ContextProvider;
+import org.apache.cxf.message.Message;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -33,7 +40,18 @@ import org.osgi.service.jaxrs.whiteboard.JaxrsWhiteboardConstants;
 	},
 	service = Application.class
 )
-public class CommerceFrontEndApplication extends Application {
+@Provider
+public class CommerceFrontEndApplication
+	extends Application implements ContextProvider<ThemeDisplay> {
+
+	@Override
+	public ThemeDisplay createContext(Message message) {
+		HttpServletRequest httpServletRequest =
+			(HttpServletRequest)message.getContextualProperty("HTTP.REQUEST");
+
+		return (ThemeDisplay)httpServletRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+	}
 
 	public Set<Object> getSingletons() {
 		Set<Object> singletons = new HashSet<>();
@@ -43,7 +61,6 @@ public class CommerceFrontEndApplication extends Application {
 		singletons.add(_commerceCartResource);
 		singletons.add(_commerceSearchResource);
 		singletons.add(_commerceWishListResource);
-		singletons.add(_themeDisplayContextProvider);
 
 		return singletons;
 	}
@@ -62,8 +79,5 @@ public class CommerceFrontEndApplication extends Application {
 
 	@Reference
 	private CommerceWishListResource _commerceWishListResource;
-
-	@Reference
-	private ThemeDisplayContextProvider _themeDisplayContextProvider;
 
 }
