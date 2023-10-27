@@ -11,6 +11,9 @@ import com.liferay.portal.search.index.IndexNameBuilder;
 import com.liferay.portal.search.tuning.synonyms.index.name.SynonymSetIndexName;
 import com.liferay.portal.search.tuning.synonyms.web.internal.BaseSynonymsWebTestCase;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexWriter;
+import com.liferay.portal.search.tuning.synonyms.web.internal.storage.helper.SynonymSetJSONStorageHelper;
+import com.liferay.portal.search.tuning.synonyms.web.internal.storage.util.SynonymSetStorageAdapterUtil;
 import com.liferay.portal.search.tuning.synonyms.web.internal.synchronizer.IndexToFilterSynchronizer;
 import com.liferay.portal.test.rule.LiferayUnitTestRule;
 
@@ -57,9 +60,6 @@ public class EditSynonymSetsMVCActionCommandTest
 		ReflectionTestUtil.setFieldValue(
 			_editSynonymSetsMVCActionCommand, "_synonymSetIndexReader",
 			synonymSetIndexReader);
-		ReflectionTestUtil.setFieldValue(
-			_editSynonymSetsMVCActionCommand, "_synonymSetStorageAdapter",
-			synonymSetStorageAdapter);
 	}
 
 	@Test
@@ -111,11 +111,10 @@ public class EditSynonymSetsMVCActionCommandTest
 		_editSynonymSetsMVCActionCommand.updateSynonymSetIndex(
 			Mockito.mock(SynonymSetIndexName.class), "car,automobile", null);
 
-		Mockito.verify(
-			synonymSetStorageAdapter, Mockito.times(1)
-		).create(
-			Mockito.any(), Mockito.any()
-		);
+		Mockito.verify(Mockito.times(1));
+		SynonymSetStorageAdapterUtil.create(
+			Mockito.any(), Mockito.any(), _synonymSetIndexWriter,
+			_synonymSetJSONStorageHelper);
 
 		SynonymSet.SynonymSetBuilder synonymSetBuilder =
 			new SynonymSet.SynonymSetBuilder();
@@ -128,11 +127,10 @@ public class EditSynonymSetsMVCActionCommandTest
 				"id-1"
 			).build());
 
-		Mockito.verify(
-			synonymSetStorageAdapter, Mockito.times(1)
-		).update(
-			Mockito.any(), Mockito.any()
-		);
+		Mockito.verify(Mockito.times(1));
+		SynonymSetStorageAdapterUtil.update(
+			Mockito.any(), Mockito.any(), _synonymSetIndexWriter,
+			_synonymSetJSONStorageHelper);
 	}
 
 	private final ActionRequest _actionRequest = Mockito.mock(
@@ -146,5 +144,7 @@ public class EditSynonymSetsMVCActionCommandTest
 		IndexNameBuilder.class);
 	private final IndexToFilterSynchronizer _indexToFilterSynchronizer =
 		Mockito.mock(IndexToFilterSynchronizer.class);
+	private SynonymSetIndexWriter _synonymSetIndexWriter;
+	private SynonymSetJSONStorageHelper _synonymSetJSONStorageHelper;
 
 }

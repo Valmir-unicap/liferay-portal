@@ -9,7 +9,9 @@ import com.liferay.portal.search.tuning.synonyms.index.name.SynonymSetIndexName;
 import com.liferay.portal.search.tuning.synonyms.web.internal.filter.SynonymSetFilterReader;
 import com.liferay.portal.search.tuning.synonyms.web.internal.filter.name.SynonymSetFilterNameHolder;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
-import com.liferay.portal.search.tuning.synonyms.web.internal.storage.SynonymSetStorageAdapter;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexWriter;
+import com.liferay.portal.search.tuning.synonyms.web.internal.storage.helper.SynonymSetJSONStorageHelper;
+import com.liferay.portal.search.tuning.synonyms.web.internal.storage.util.SynonymSetStorageAdapterUtil;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -41,8 +43,9 @@ public class FilterToIndexSynchronizerImpl
 
 		synonymSetBuilder.synonyms(synonyms);
 
-		_synonymSetStorageAdapter.create(
-			synonymSetIndexName, synonymSetBuilder.build());
+		SynonymSetStorageAdapterUtil.create(
+			synonymSetIndexName, synonymSetBuilder.build(),
+			_synonymSetIndexWriter, _synonymSetJSONStorageHelper);
 	}
 
 	private String[] _getSynonymsFromFilters(String companyIndexName) {
@@ -65,6 +68,9 @@ public class FilterToIndexSynchronizerImpl
 	private SynonymSetFilterReader _synonymSetFilterReader;
 
 	@Reference
-	private SynonymSetStorageAdapter _synonymSetStorageAdapter;
+	private SynonymSetIndexWriter _synonymSetIndexWriter;
+
+	@Reference
+	private SynonymSetJSONStorageHelper _synonymSetJSONStorageHelper;
 
 }

@@ -6,15 +6,14 @@
 package com.liferay.portal.search.tuning.synonyms.web.internal.storage;
 
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.search.tuning.synonyms.index.name.SynonymSetIndexName;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexWriter;
 import com.liferay.portal.search.tuning.synonyms.web.internal.storage.helper.SynonymSetJSONStorageHelper;
+import com.liferay.portal.search.tuning.synonyms.web.internal.storage.util.SynonymSetStorageAdapterUtil;
 import com.liferay.portal.test.rule.LiferayUnitTestRule;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -31,18 +30,6 @@ public class SynonymSetStorageAdapterTest {
 	public static final LiferayUnitTestRule liferayUnitTestRule =
 		LiferayUnitTestRule.INSTANCE;
 
-	@Before
-	public void setUp() throws Exception {
-		_synonymSetStorageAdapter = new SynonymSetStorageAdapter();
-
-		ReflectionTestUtil.setFieldValue(
-			_synonymSetStorageAdapter, "synonymSetIndexWriter",
-			_synonymSetIndexWriter);
-		ReflectionTestUtil.setFieldValue(
-			_synonymSetStorageAdapter, "synonymSetJSONStorageHelper",
-			_synonymSetJSONStorageHelper);
-	}
-
 	@Test
 	public void testCreate() {
 		Mockito.doReturn(
@@ -55,9 +42,10 @@ public class SynonymSetStorageAdapterTest {
 
 		Assert.assertEquals(
 			"synonymSetDocumentId",
-			_synonymSetStorageAdapter.create(
+			SynonymSetStorageAdapterUtil.create(
 				Mockito.mock(SynonymSetIndexName.class),
-				Mockito.mock(SynonymSet.class)));
+				Mockito.mock(SynonymSet.class), _synonymSetIndexWriter,
+				_synonymSetJSONStorageHelper));
 
 		Mockito.verify(
 			_synonymSetIndexWriter, Mockito.times(1)
@@ -68,9 +56,10 @@ public class SynonymSetStorageAdapterTest {
 
 	@Test
 	public void testDelete() throws Exception {
-		_synonymSetStorageAdapter.delete(
+		SynonymSetStorageAdapterUtil.delete(
 			Mockito.mock(SynonymSetIndexName.class),
-			"synonymSetDocumentId_PORTLET_1112");
+			"synonymSetDocumentId_PORTLET_1112", _synonymSetIndexWriter,
+			_synonymSetJSONStorageHelper);
 
 		Mockito.verify(
 			_synonymSetIndexWriter, Mockito.times(1)
@@ -81,9 +70,10 @@ public class SynonymSetStorageAdapterTest {
 
 	@Test(expected = PortalException.class)
 	public void testDeleteException() throws Exception {
-		_synonymSetStorageAdapter.delete(
+		SynonymSetStorageAdapterUtil.delete(
 			Mockito.mock(SynonymSetIndexName.class),
-			"synonymSetDocumentId_PORTLET");
+			"synonymSetDocumentId_PORTLET", _synonymSetIndexWriter,
+			_synonymSetJSONStorageHelper);
 	}
 
 	@Test
@@ -96,8 +86,9 @@ public class SynonymSetStorageAdapterTest {
 			synonymSet
 		).getSynonymSetDocumentId();
 
-		_synonymSetStorageAdapter.update(
-			Mockito.mock(SynonymSetIndexName.class), synonymSet);
+		SynonymSetStorageAdapterUtil.update(
+			Mockito.mock(SynonymSetIndexName.class), synonymSet,
+			_synonymSetIndexWriter, _synonymSetJSONStorageHelper);
 
 		Mockito.verify(
 			_synonymSetIndexWriter, Mockito.times(1)
@@ -116,14 +107,14 @@ public class SynonymSetStorageAdapterTest {
 			synonymSet
 		).getSynonymSetDocumentId();
 
-		_synonymSetStorageAdapter.update(
-			Mockito.mock(SynonymSetIndexName.class), synonymSet);
+		SynonymSetStorageAdapterUtil.update(
+			Mockito.mock(SynonymSetIndexName.class), synonymSet,
+			_synonymSetIndexWriter, _synonymSetJSONStorageHelper);
 	}
 
 	private final SynonymSetIndexWriter _synonymSetIndexWriter = Mockito.mock(
 		SynonymSetIndexWriter.class);
 	private final SynonymSetJSONStorageHelper _synonymSetJSONStorageHelper =
 		Mockito.mock(SynonymSetJSONStorageHelper.class);
-	private SynonymSetStorageAdapter _synonymSetStorageAdapter;
 
 }
