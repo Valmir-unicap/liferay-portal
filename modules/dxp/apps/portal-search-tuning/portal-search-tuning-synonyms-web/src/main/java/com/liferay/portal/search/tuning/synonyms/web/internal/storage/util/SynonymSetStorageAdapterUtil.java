@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-package com.liferay.portal.search.tuning.synonyms.web.internal.storage;
+package com.liferay.portal.search.tuning.synonyms.web.internal.storage.util;
 
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -15,17 +15,15 @@ import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexWriter;
 import com.liferay.portal.search.tuning.synonyms.web.internal.storage.helper.SynonymSetJSONStorageHelper;
 
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-
 /**
  * @author Bryan Engler
  */
-@Component(service = SynonymSetStorageAdapter.class)
-public class SynonymSetStorageAdapter {
+public class SynonymSetStorageAdapterUtil {
 
-	public String create(
-		SynonymSetIndexName synonymSetIndexName, SynonymSet synonymSet) {
+	public static String create(
+		SynonymSetIndexName synonymSetIndexName, SynonymSet synonymSet,
+		SynonymSetIndexWriter synonymSetIndexWriter,
+		SynonymSetJSONStorageHelper synonymSetJSONStorageHelper) {
 
 		String synonymSetDocumentId =
 			synonymSetJSONStorageHelper.addJSONStorageEntry(
@@ -42,9 +40,11 @@ public class SynonymSetStorageAdapter {
 		return synonymSetDocumentId;
 	}
 
-	public void delete(
+	public static void delete(
 			SynonymSetIndexName synonymSetIndexName,
-			String synonymSetDocumentId)
+			String synonymSetDocumentId,
+			SynonymSetIndexWriter synonymSetIndexWriter,
+			SynonymSetJSONStorageHelper synonymSetJSONStorageHelper)
 		throws PortalException {
 
 		synonymSetJSONStorageHelper.deleteJSONStorageEntry(
@@ -53,8 +53,10 @@ public class SynonymSetStorageAdapter {
 		synonymSetIndexWriter.remove(synonymSetIndexName, synonymSetDocumentId);
 	}
 
-	public void update(
-			SynonymSetIndexName synonymSetIndexName, SynonymSet synonymSet)
+	public static void update(
+			SynonymSetIndexName synonymSetIndexName, SynonymSet synonymSet,
+			SynonymSetIndexWriter synonymSetIndexWriter,
+			SynonymSetJSONStorageHelper synonymSetJSONStorageHelper)
 		throws PortalException {
 
 		synonymSetJSONStorageHelper.updateJSONStorageEntry(
@@ -64,13 +66,7 @@ public class SynonymSetStorageAdapter {
 		synonymSetIndexWriter.update(synonymSetIndexName, synonymSet);
 	}
 
-	@Reference
-	protected SynonymSetIndexWriter synonymSetIndexWriter;
-
-	@Reference
-	protected SynonymSetJSONStorageHelper synonymSetJSONStorageHelper;
-
-	private long _getClassPK(String synonymSetDocumentId)
+	private static long _getClassPK(String synonymSetDocumentId)
 		throws PortalException {
 
 		String[] parts = StringUtil.split(synonymSetDocumentId, "_PORTLET_");
@@ -91,6 +87,6 @@ public class SynonymSetStorageAdapter {
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
-		SynonymSetStorageAdapter.class);
+		SynonymSetStorageAdapterUtil.class);
 
 }

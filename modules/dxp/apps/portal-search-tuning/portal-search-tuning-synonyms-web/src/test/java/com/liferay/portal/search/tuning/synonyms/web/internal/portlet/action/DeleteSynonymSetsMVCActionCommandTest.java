@@ -10,6 +10,9 @@ import com.liferay.portal.search.index.IndexNameBuilder;
 import com.liferay.portal.search.tuning.synonyms.index.name.SynonymSetIndexName;
 import com.liferay.portal.search.tuning.synonyms.web.internal.BaseSynonymsWebTestCase;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexWriter;
+import com.liferay.portal.search.tuning.synonyms.web.internal.storage.helper.SynonymSetJSONStorageHelper;
+import com.liferay.portal.search.tuning.synonyms.web.internal.storage.util.SynonymSetStorageAdapterUtil;
 import com.liferay.portal.search.tuning.synonyms.web.internal.synchronizer.IndexToFilterSynchronizer;
 import com.liferay.portal.test.rule.LiferayUnitTestRule;
 
@@ -59,9 +62,6 @@ public class DeleteSynonymSetsMVCActionCommandTest
 		ReflectionTestUtil.setFieldValue(
 			_deleteSynonymSetsMVCActionCommand, "_synonymSetIndexReader",
 			synonymSetIndexReader);
-		ReflectionTestUtil.setFieldValue(
-			_deleteSynonymSetsMVCActionCommand, "_synonymSetStorageAdapter",
-			synonymSetStorageAdapter);
 	}
 
 	@Test
@@ -124,11 +124,10 @@ public class DeleteSynonymSetsMVCActionCommandTest
 					"id-2"
 				).build()));
 
-		Mockito.verify(
-			synonymSetStorageAdapter, Mockito.times(2)
-		).delete(
-			Mockito.any(), Mockito.anyString()
-		);
+		Mockito.verify(Mockito.times(2));
+		SynonymSetStorageAdapterUtil.delete(
+			Mockito.any(), Mockito.anyString(), _synonymSetIndexWriter,
+			_synonymSetJSONStorageHelper);
 	}
 
 	private final ActionRequest _actionRequest = Mockito.mock(
@@ -143,5 +142,7 @@ public class DeleteSynonymSetsMVCActionCommandTest
 		IndexNameBuilder.class);
 	private final IndexToFilterSynchronizer _indexToFilterSynchronizer =
 		Mockito.mock(IndexToFilterSynchronizer.class);
+	private SynonymSetIndexWriter _synonymSetIndexWriter;
+	private SynonymSetJSONStorageHelper _synonymSetJSONStorageHelper;
 
 }

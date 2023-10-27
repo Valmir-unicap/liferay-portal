@@ -35,7 +35,6 @@ import com.liferay.portal.search.tuning.synonyms.web.internal.filter.name.Synony
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetFields;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexReader;
-import com.liferay.portal.search.tuning.synonyms.web.internal.storage.SynonymSetStorageAdapter;
 
 import java.util.Arrays;
 
@@ -393,8 +392,6 @@ public abstract class BaseSynonymsWebTestCase {
 		Mockito.mock(SynonymSetIndexNameBuilder.class);
 	protected SynonymSetIndexReader synonymSetIndexReader = Mockito.mock(
 		SynonymSetIndexReader.class);
-	protected SynonymSetStorageAdapter synonymSetStorageAdapter = Mockito.mock(
-		SynonymSetStorageAdapter.class);
 
 	private void _setUpLayoutIsTypeControlPanel(
 		Layout layout, boolean returnValue) {

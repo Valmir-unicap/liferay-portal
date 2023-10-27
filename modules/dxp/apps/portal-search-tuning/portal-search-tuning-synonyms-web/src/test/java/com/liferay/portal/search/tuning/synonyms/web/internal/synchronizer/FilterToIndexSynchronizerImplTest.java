@@ -8,6 +8,9 @@ package com.liferay.portal.search.tuning.synonyms.web.internal.synchronizer;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.search.tuning.synonyms.index.name.SynonymSetIndexName;
 import com.liferay.portal.search.tuning.synonyms.web.internal.BaseSynonymsWebTestCase;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexWriter;
+import com.liferay.portal.search.tuning.synonyms.web.internal.storage.helper.SynonymSetJSONStorageHelper;
+import com.liferay.portal.search.tuning.synonyms.web.internal.storage.util.SynonymSetStorageAdapterUtil;
 import com.liferay.portal.test.rule.LiferayUnitTestRule;
 
 import org.junit.Before;
@@ -37,9 +40,6 @@ public class FilterToIndexSynchronizerImplTest extends BaseSynonymsWebTestCase {
 		ReflectionTestUtil.setFieldValue(
 			_filterToIndexSynchronizerImpl, "_synonymSetFilterReader",
 			synonymSetFilterReader);
-		ReflectionTestUtil.setFieldValue(
-			_filterToIndexSynchronizerImpl, "_synonymSetStorageAdapter",
-			synonymSetStorageAdapter);
 	}
 
 	@Test
@@ -49,13 +49,16 @@ public class FilterToIndexSynchronizerImplTest extends BaseSynonymsWebTestCase {
 
 		_filterToIndexSynchronizerImpl.copyToIndex(
 			"companyIndexName", Mockito.mock(SynonymSetIndexName.class));
-		Mockito.verify(
-			synonymSetStorageAdapter, Mockito.times(1)
-		).create(
-			Mockito.any(), Mockito.any()
-		);
+		Mockito.verify(Mockito.times(1));
+		SynonymSetStorageAdapterUtil.create(
+			Mockito.any(), Mockito.any(), _synonymSetIndexWriter,
+			_synonymSetJSONStorageHelper);
 	}
 
 	private FilterToIndexSynchronizerImpl _filterToIndexSynchronizerImpl;
+	private final SynonymSetIndexWriter _synonymSetIndexWriter = Mockito.mock(
+		SynonymSetIndexWriter.class);
+	private final SynonymSetJSONStorageHelper _synonymSetJSONStorageHelper =
+		Mockito.mock(SynonymSetJSONStorageHelper.class);
 
 }
