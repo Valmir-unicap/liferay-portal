@@ -32,9 +32,10 @@ import com.liferay.portal.search.tuning.rankings.web.internal.exception.Duplicat
 import com.liferay.portal.search.tuning.rankings.web.internal.index.DuplicateQueryStringsDetector;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.Ranking;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexReader;
+import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexWriter;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexName;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexNameBuilder;
-import com.liferay.portal.search.tuning.rankings.web.internal.storage.RankingStorageAdapter;
+import com.liferay.portal.search.tuning.rankings.web.internal.storage.helper.RankingJSONStorageHelper;
 import com.liferay.portal.search.tuning.rankings.web.internal.util.RankingUtil;
 
 import java.io.IOException;
@@ -65,6 +66,29 @@ import org.osgi.service.component.annotations.Reference;
 	service = MVCActionCommand.class
 )
 public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
+
+	public String create(Ranking ranking, RankingIndexName rankingIndexName) {
+		String rankingDocumentId = rankingJSONStorageHelper.addJSONStorageEntry(
+			ranking);
+
+		Ranking.RankingBuilder rankingBuilder = new Ranking.RankingBuilder(
+			ranking);
+
+		rankingBuilder.rankingDocumentId(rankingDocumentId);
+
+		rankingIndexWriter.create(rankingIndexName, rankingBuilder.build());
+
+		return rankingDocumentId;
+	}
+
+	public void delete(
+			String rankingDocumentId, RankingIndexName rankingIndexName)
+		throws PortalException {
+
+		rankingJSONStorageHelper.deleteJSONStorageEntry(rankingDocumentId);
+
+		rankingIndexWriter.remove(rankingIndexName, rankingDocumentId);
+	}
 
 	@Override
 	public void doProcessAction(
@@ -101,6 +125,14 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 		}
 	}
 
+	public void update(Ranking ranking, RankingIndexName rankingIndexName)
+		throws PortalException {
+
+		rankingJSONStorageHelper.updateJSONStorageEntry(ranking);
+
+		rankingIndexWriter.update(rankingIndexName, ranking);
+	}
+
 	protected String getIndexName(ActionRequest actionRequest) {
 		return indexNameBuilder.getIndexName(
 			portal.getCompanyId(actionRequest));
@@ -126,7 +158,10 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 	protected RankingIndexReader rankingIndexReader;
 
 	@Reference
-	protected RankingStorageAdapter rankingStorageAdapter;
+	protected RankingIndexWriter rankingIndexWriter;
+
+	@Reference
+	protected RankingJSONStorageHelper rankingJSONStorageHelper;
 
 	private void _add(
 			ActionRequest actionRequest, ActionResponse actionResponse,
@@ -201,7 +236,7 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 
 		RankingIndexName rankingIndexName = getRankingIndexName();
 
-		String id = rankingStorageAdapter.create(ranking, rankingIndexName);
+		String id = create(ranking, rankingIndexName);
 
 		return rankingIndexReader.fetch(id, rankingIndexName);
 	}
@@ -257,8 +292,7 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 
 			rankingBuilder.inactive(inactive);
 
-			rankingStorageAdapter.update(
-				rankingBuilder.build(), getRankingIndexName());
+			update(rankingBuilder.build(), getRankingIndexName());
 		}
 	}
 
@@ -283,8 +317,7 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 			actionRequest, editRankingMVCActionRequest);
 
 		for (String rankingDocumentId : rankingDocumentIds) {
-			rankingStorageAdapter.delete(
-				rankingDocumentId, getRankingIndexName());
+			delete(rankingDocumentId, getRankingIndexName());
 		}
 	}
 
@@ -553,8 +586,7 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 			rankingBuilder.pins(null);
 		}
 
-		rankingStorageAdapter.update(
-			rankingBuilder.build(), getRankingIndexName());
+		update(rankingBuilder.build(), getRankingIndexName());
 	}
 
 	private List<String> _updateHiddenIds(
