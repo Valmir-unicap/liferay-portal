@@ -16,7 +16,9 @@ import com.liferay.portal.search.tuning.synonyms.index.name.SynonymSetIndexNameB
 import com.liferay.portal.search.tuning.synonyms.web.internal.constants.SynonymsPortletKeys;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexReader;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexWriter;
 import com.liferay.portal.search.tuning.synonyms.web.internal.storage.SynonymSetStorageAdapter;
+import com.liferay.portal.search.tuning.synonyms.web.internal.storage.helper.SynonymSetJSONStorageHelper;
 import com.liferay.portal.search.tuning.synonyms.web.internal.synchronizer.IndexToFilterSynchronizer;
 
 import javax.portlet.ActionRequest;
@@ -90,14 +92,16 @@ public class EditSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 
 		if (synonymSet == null) {
 			_synonymSetStorageAdapter.create(
-				synonymSetIndexName, synonymSetBuilder.build());
+				synonymSetIndexName, synonymSetBuilder.build(),
+				_synonymSetJSONStorageHelper, _synonymSetIndexWriter);
 		}
 		else {
 			synonymSetBuilder.synonymSetDocumentId(
 				synonymSet.getSynonymSetDocumentId());
 
 			_synonymSetStorageAdapter.update(
-				synonymSetIndexName, synonymSetBuilder.build());
+				synonymSetIndexName, synonymSetBuilder.build(),
+				_synonymSetJSONStorageHelper, _synonymSetIndexWriter);
 		}
 	}
 
@@ -117,6 +121,12 @@ public class EditSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 	private SynonymSetIndexReader _synonymSetIndexReader;
 
 	@Reference
-	private SynonymSetStorageAdapter _synonymSetStorageAdapter;
+	private SynonymSetIndexWriter _synonymSetIndexWriter;
+
+	@Reference
+	private SynonymSetJSONStorageHelper _synonymSetJSONStorageHelper;
+
+	private final SynonymSetStorageAdapter _synonymSetStorageAdapter =
+		new SynonymSetStorageAdapter();
 
 }

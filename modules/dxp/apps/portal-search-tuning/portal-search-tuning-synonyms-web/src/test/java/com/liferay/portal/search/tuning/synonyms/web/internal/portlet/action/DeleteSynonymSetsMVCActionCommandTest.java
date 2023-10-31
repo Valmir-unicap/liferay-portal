@@ -127,7 +127,7 @@ public class DeleteSynonymSetsMVCActionCommandTest
 		Mockito.verify(
 			synonymSetStorageAdapter, Mockito.times(2)
 		).delete(
-			Mockito.any(), Mockito.anyString()
+			Mockito.any(), Mockito.anyString(), Mockito.any(), Mockito.any()
 		);
 	}
 

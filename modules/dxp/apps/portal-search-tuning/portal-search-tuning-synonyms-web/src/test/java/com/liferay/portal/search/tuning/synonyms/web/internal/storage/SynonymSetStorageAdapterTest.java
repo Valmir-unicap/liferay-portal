@@ -57,7 +57,9 @@ public class SynonymSetStorageAdapterTest {
 			"synonymSetDocumentId",
 			_synonymSetStorageAdapter.create(
 				Mockito.mock(SynonymSetIndexName.class),
-				Mockito.mock(SynonymSet.class)));
+				Mockito.mock(SynonymSet.class),
+				Mockito.mock(SynonymSetJSONStorageHelper.class),
+				Mockito.mock(SynonymSetIndexWriter.class)));
 
 		Mockito.verify(
 			_synonymSetIndexWriter, Mockito.times(1)
@@ -70,7 +72,8 @@ public class SynonymSetStorageAdapterTest {
 	public void testDelete() throws Exception {
 		_synonymSetStorageAdapter.delete(
 			Mockito.mock(SynonymSetIndexName.class),
-			"synonymSetDocumentId_PORTLET_1112");
+			"synonymSetDocumentId_PORTLET_1112", _synonymSetJSONStorageHelper,
+			_synonymSetIndexWriter);
 
 		Mockito.verify(
 			_synonymSetIndexWriter, Mockito.times(1)
@@ -83,7 +86,8 @@ public class SynonymSetStorageAdapterTest {
 	public void testDeleteException() throws Exception {
 		_synonymSetStorageAdapter.delete(
 			Mockito.mock(SynonymSetIndexName.class),
-			"synonymSetDocumentId_PORTLET");
+			"synonymSetDocumentId_PORTLET", _synonymSetJSONStorageHelper,
+			_synonymSetIndexWriter);
 	}
 
 	@Test
@@ -97,7 +101,8 @@ public class SynonymSetStorageAdapterTest {
 		).getSynonymSetDocumentId();
 
 		_synonymSetStorageAdapter.update(
-			Mockito.mock(SynonymSetIndexName.class), synonymSet);
+			Mockito.mock(SynonymSetIndexName.class), synonymSet,
+			_synonymSetJSONStorageHelper, _synonymSetIndexWriter);
 
 		Mockito.verify(
 			_synonymSetIndexWriter, Mockito.times(1)
@@ -117,13 +122,15 @@ public class SynonymSetStorageAdapterTest {
 		).getSynonymSetDocumentId();
 
 		_synonymSetStorageAdapter.update(
-			Mockito.mock(SynonymSetIndexName.class), synonymSet);
+			Mockito.mock(SynonymSetIndexName.class), synonymSet,
+			_synonymSetJSONStorageHelper, _synonymSetIndexWriter);
 	}
 
 	private final SynonymSetIndexWriter _synonymSetIndexWriter = Mockito.mock(
 		SynonymSetIndexWriter.class);
 	private final SynonymSetJSONStorageHelper _synonymSetJSONStorageHelper =
 		Mockito.mock(SynonymSetJSONStorageHelper.class);
-	private SynonymSetStorageAdapter _synonymSetStorageAdapter;
+	private SynonymSetStorageAdapter _synonymSetStorageAdapter =
+		new SynonymSetStorageAdapter();
 
 }

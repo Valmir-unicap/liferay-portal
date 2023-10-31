@@ -114,7 +114,7 @@ public class EditSynonymSetsMVCActionCommandTest
 		Mockito.verify(
 			synonymSetStorageAdapter, Mockito.times(1)
 		).create(
-			Mockito.any(), Mockito.any()
+			Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()
 		);
 
 		SynonymSet.SynonymSetBuilder synonymSetBuilder =
@@ -131,7 +131,7 @@ public class EditSynonymSetsMVCActionCommandTest
 		Mockito.verify(
 			synonymSetStorageAdapter, Mockito.times(1)
 		).update(
-			Mockito.any(), Mockito.any()
+			Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()
 		);
 	}
 

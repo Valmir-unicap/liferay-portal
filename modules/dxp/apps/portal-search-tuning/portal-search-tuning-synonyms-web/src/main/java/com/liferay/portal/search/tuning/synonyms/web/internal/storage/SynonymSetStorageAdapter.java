@@ -15,17 +15,15 @@ import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexWriter;
 import com.liferay.portal.search.tuning.synonyms.web.internal.storage.helper.SynonymSetJSONStorageHelper;
 
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-
 /**
  * @author Bryan Engler
  */
-@Component(service = SynonymSetStorageAdapter.class)
 public class SynonymSetStorageAdapter {
 
 	public String create(
-		SynonymSetIndexName synonymSetIndexName, SynonymSet synonymSet) {
+		SynonymSetIndexName synonymSetIndexName, SynonymSet synonymSet,
+		SynonymSetJSONStorageHelper synonymSetJSONStorageHelper,
+		SynonymSetIndexWriter synonymSetIndexWriter) {
 
 		String synonymSetDocumentId =
 			synonymSetJSONStorageHelper.addJSONStorageEntry(
@@ -44,7 +42,9 @@ public class SynonymSetStorageAdapter {
 
 	public void delete(
 			SynonymSetIndexName synonymSetIndexName,
-			String synonymSetDocumentId)
+			String synonymSetDocumentId,
+			SynonymSetJSONStorageHelper synonymSetJSONStorageHelper,
+			SynonymSetIndexWriter synonymSetIndexWriter)
 		throws PortalException {
 
 		synonymSetJSONStorageHelper.deleteJSONStorageEntry(
@@ -54,7 +54,9 @@ public class SynonymSetStorageAdapter {
 	}
 
 	public void update(
-			SynonymSetIndexName synonymSetIndexName, SynonymSet synonymSet)
+			SynonymSetIndexName synonymSetIndexName, SynonymSet synonymSet,
+			SynonymSetJSONStorageHelper synonymSetJSONStorageHelper,
+			SynonymSetIndexWriter synonymSetIndexWriter)
 		throws PortalException {
 
 		synonymSetJSONStorageHelper.updateJSONStorageEntry(
@@ -63,12 +65,6 @@ public class SynonymSetStorageAdapter {
 
 		synonymSetIndexWriter.update(synonymSetIndexName, synonymSet);
 	}
-
-	@Reference
-	protected SynonymSetIndexWriter synonymSetIndexWriter;
-
-	@Reference
-	protected SynonymSetJSONStorageHelper synonymSetJSONStorageHelper;
 
 	private long _getClassPK(String synonymSetDocumentId)
 		throws PortalException {
