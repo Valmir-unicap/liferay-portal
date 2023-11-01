@@ -11,16 +11,16 @@ import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndex
 import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexName;
 import com.liferay.portal.search.tuning.rankings.web.internal.storage.helper.RankingJSONStorageHelper;
 
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-
 /**
  * @author Bryan Engler
  */
-@Component(service = RankingStorageAdapter.class)
 public class RankingStorageAdapter {
 
-	public String create(Ranking ranking, RankingIndexName rankingIndexName) {
+	public String create(
+		Ranking ranking, RankingIndexName rankingIndexName,
+		RankingIndexWriter rankingIndexWriter,
+		RankingJSONStorageHelper rankingJSONStorageHelper) {
+
 		String rankingDocumentId = rankingJSONStorageHelper.addJSONStorageEntry(
 			ranking);
 
@@ -35,7 +35,9 @@ public class RankingStorageAdapter {
 	}
 
 	public void delete(
-			String rankingDocumentId, RankingIndexName rankingIndexName)
+			String rankingDocumentId, RankingIndexName rankingIndexName,
+			RankingIndexWriter rankingIndexWriter,
+			RankingJSONStorageHelper rankingJSONStorageHelper)
 		throws PortalException {
 
 		rankingJSONStorageHelper.deleteJSONStorageEntry(rankingDocumentId);
@@ -43,18 +45,15 @@ public class RankingStorageAdapter {
 		rankingIndexWriter.remove(rankingIndexName, rankingDocumentId);
 	}
 
-	public void update(Ranking ranking, RankingIndexName rankingIndexName)
+	public void update(
+			Ranking ranking, RankingIndexName rankingIndexName,
+			RankingIndexWriter rankingIndexWriter,
+			RankingJSONStorageHelper rankingJSONStorageHelper)
 		throws PortalException {
 
 		rankingJSONStorageHelper.updateJSONStorageEntry(ranking);
 
 		rankingIndexWriter.update(rankingIndexName, ranking);
 	}
-
-	@Reference
-	protected RankingIndexWriter rankingIndexWriter;
-
-	@Reference
-	protected RankingJSONStorageHelper rankingJSONStorageHelper;
 
 }

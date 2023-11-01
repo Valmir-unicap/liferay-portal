@@ -32,9 +32,11 @@ import com.liferay.portal.search.tuning.rankings.web.internal.exception.Duplicat
 import com.liferay.portal.search.tuning.rankings.web.internal.index.DuplicateQueryStringsDetector;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.Ranking;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexReader;
+import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexWriter;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexName;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexNameBuilder;
 import com.liferay.portal.search.tuning.rankings.web.internal.storage.RankingStorageAdapter;
+import com.liferay.portal.search.tuning.rankings.web.internal.storage.helper.RankingJSONStorageHelper;
 import com.liferay.portal.search.tuning.rankings.web.internal.util.RankingUtil;
 
 import java.io.IOException;
@@ -125,9 +127,6 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 	@Reference
 	protected RankingIndexReader rankingIndexReader;
 
-	@Reference
-	protected RankingStorageAdapter rankingStorageAdapter;
-
 	private void _add(
 			ActionRequest actionRequest, ActionResponse actionResponse,
 			EditRankingMVCActionRequest editRankingMVCActionRequest)
@@ -201,7 +200,9 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 
 		RankingIndexName rankingIndexName = getRankingIndexName();
 
-		String id = rankingStorageAdapter.create(ranking, rankingIndexName);
+		String id = _rankingStorageAdapter.create(
+			ranking, rankingIndexName, _rankingIndexWriter,
+			_rankingJSONStorageHelper);
 
 		return rankingIndexReader.fetch(id, rankingIndexName);
 	}
@@ -257,8 +258,9 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 
 			rankingBuilder.inactive(inactive);
 
-			rankingStorageAdapter.update(
-				rankingBuilder.build(), getRankingIndexName());
+			_rankingStorageAdapter.update(
+				rankingBuilder.build(), getRankingIndexName(),
+				_rankingIndexWriter, _rankingJSONStorageHelper);
 		}
 	}
 
@@ -283,8 +285,9 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 			actionRequest, editRankingMVCActionRequest);
 
 		for (String rankingDocumentId : rankingDocumentIds) {
-			rankingStorageAdapter.delete(
-				rankingDocumentId, getRankingIndexName());
+			_rankingStorageAdapter.delete(
+				rankingDocumentId, getRankingIndexName(), _rankingIndexWriter,
+				_rankingJSONStorageHelper);
 		}
 	}
 
@@ -553,8 +556,9 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 			rankingBuilder.pins(null);
 		}
 
-		rankingStorageAdapter.update(
-			rankingBuilder.build(), getRankingIndexName());
+		_rankingStorageAdapter.update(
+			rankingBuilder.build(), getRankingIndexName(), _rankingIndexWriter,
+			_rankingJSONStorageHelper);
 	}
 
 	private List<String> _updateHiddenIds(
@@ -581,6 +585,15 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 	private static final String _UPDATE_SPECIAL = StringPool.GREATER_THAN;
 
 	private long _companyId;
+
+	@Reference
+	private RankingIndexWriter _rankingIndexWriter;
+
+	@Reference
+	private RankingJSONStorageHelper _rankingJSONStorageHelper;
+
+	private final RankingStorageAdapter _rankingStorageAdapter =
+		new RankingStorageAdapter();
 	private final ResultRankingsConfiguration _resultRankingsConfiguration =
 		new DefaultResultRankingsConfiguration();
 
