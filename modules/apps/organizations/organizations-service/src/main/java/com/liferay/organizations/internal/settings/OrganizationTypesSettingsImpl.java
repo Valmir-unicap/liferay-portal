@@ -6,14 +6,9 @@
 package com.liferay.organizations.internal.settings;
 
 import com.liferay.organizations.internal.configuration.OrganizationTypeConfiguration;
-import com.liferay.organizations.internal.configuration.OrganizationTypeConfigurationWrapper;
-import com.liferay.osgi.service.tracker.collections.map.ServiceReferenceMapperFactory;
-import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
-import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.HashMapDictionaryBuilder;
 import com.liferay.users.admin.kernel.organization.types.OrganizationTypesSettings;
 
@@ -33,66 +28,70 @@ import org.osgi.service.component.annotations.Deactivate;
 /**
  * @author Marco Leo
  */
-@Component(service = OrganizationTypesSettings.class)
+@Component(
+	configurationPid = "com.liferay.organizations.internal.configuration.OrganizationTypeConfiguration",
+	service = OrganizationTypesSettings.class
+)
 public class OrganizationTypesSettingsImpl
 	implements OrganizationTypesSettings {
 
 	@Override
 	public String[] getChildrenTypes(String type) {
-		OrganizationTypeConfigurationWrapper
-			organizationTypeConfigurationWrapper =
-				_getOrganizationTypeConfigurationWrapper(type);
+		OrganizationTypeConfiguration organizationTypeConfiguration =
+			_organizationTypeConfigurationNameOrganizationTypeConfiguration.get(
+				type);
 
-		if (organizationTypeConfigurationWrapper == null) {
+		if (organizationTypeConfiguration == null) {
 			return new String[0];
 		}
 
-		return organizationTypeConfigurationWrapper.getChildrenTypes();
+		return organizationTypeConfiguration.childrenTypes();
 	}
 
 	@Override
 	public String[] getTypes() {
 		return ArrayUtil.toStringArray(
-			_organizationTypeConfigurationWrapperServiceTrackerMap.keySet());
+			_organizationTypeConfigurationNameOrganizationTypeConfiguration.
+				keySet());
 	}
 
 	@Override
 	public boolean isCountryEnabled(String type) {
-		OrganizationTypeConfigurationWrapper
-			organizationTypeConfigurationWrapper =
-				_getOrganizationTypeConfigurationWrapper(type);
+		OrganizationTypeConfiguration organizationTypeConfiguration =
+			_organizationTypeConfigurationNameOrganizationTypeConfiguration.get(
+				type);
 
-		if (organizationTypeConfigurationWrapper == null) {
+		if (organizationTypeConfiguration == null) {
 			return false;
 		}
 
-		return organizationTypeConfigurationWrapper.isCountryEnabled();
+		return organizationTypeConfiguration.countryEnabled();
 	}
 
 	@Override
 	public boolean isCountryRequired(String type) {
-		OrganizationTypeConfigurationWrapper
-			organizationTypeConfigurationWrapper =
-				_getOrganizationTypeConfigurationWrapper(type);
+		OrganizationTypeConfiguration organizationTypeConfiguration =
+			_organizationTypeConfigurationNameOrganizationTypeConfiguration.get(
+				type);
 
-		if (organizationTypeConfigurationWrapper == null) {
+		if (organizationTypeConfiguration == null) {
 			return false;
 		}
 
-		return organizationTypeConfigurationWrapper.isCountryRequired();
+		return organizationTypeConfiguration.countryRequired();
 	}
 
 	@Override
 	public boolean isRootable(String type) {
-		OrganizationTypeConfigurationWrapper
-			organizationTypeConfigurationWrapper =
-				_getOrganizationTypeConfigurationWrapper(type);
+		OrganizationTypeConfiguration organizationTypeConfiguration =
+			_organizationTypeConfigurationNameOrganizationTypeConfiguration.get(
+				type);
 
-		if (organizationTypeConfigurationWrapper == null) {
+		if (organizationTypeConfiguration == null) {
 			return false;
 		}
 
-		return organizationTypeConfigurationWrapper.isRootable();
+		return organizationTypeConfiguration.rootable();
 	}
 
 	public class OrganizationTypeConfigurationManagedServiceFactory
@@ -132,6 +131,18 @@ public class OrganizationTypesSettingsImpl
 
 	@Activate
 	protected void activate(BundleContext bundleContext) {
+		OrganizationTypeConfiguration organizationTypeConfiguration =
+			ConfigurableUtil.createConfigurable(
+				OrganizationTypeConfiguration.class, new HashMapDictionary<>());
+
+		_configurationPidOrganizationTypeConfigurationName.put(
+			"com.liferay.organizations.internal.configuration." +
+				"OrganizationTypeConfiguration",
+			organizationTypeConfiguration.name());
+		_organizationTypeConfigurationNameOrganizationTypeConfiguration.put(
+			organizationTypeConfiguration.name(),
+			organizationTypeConfiguration);
+
 		_managedServiceFactoryServiceRegistration =
 			bundleContext.registerService(
 				ManagedServiceFactory.class,
@@ -141,40 +152,12 @@ public class OrganizationTypesSettingsImpl
 					"com.liferay.organizations.internal.configuration." +
 						"OrganizationTypeConfiguration"
 				).build());
-
-		_organizationTypeConfigurationWrapperServiceTrackerMap =
-			ServiceTrackerMapFactory.openSingleValueMap(
-				bundleContext, OrganizationTypeConfigurationWrapper.class, null,
-				ServiceReferenceMapperFactory.create(
-					bundleContext,
-					(organizationTypeConfigurationWrapper, emitter) ->
-						emitter.emit(
-							organizationTypeConfigurationWrapper.getName())));
 	}
 
 	@Deactivate
 	protected void deactivate() {
 		_managedServiceFactoryServiceRegistration.unregister();
-		_organizationTypeConfigurationWrapperServiceTrackerMap.close();
 	}
-
-	private OrganizationTypeConfigurationWrapper
-		_getOrganizationTypeConfigurationWrapper(String type) {
-
-		OrganizationTypeConfigurationWrapper
-			organizationTypeConfigurationWrapper =
-				_organizationTypeConfigurationWrapperServiceTrackerMap.
-					getService(type);
-
-		if (organizationTypeConfigurationWrapper == null) {
-			_log.error("Unable to get organization type: " + type);
-		}
-
-		return organizationTypeConfigurationWrapper;
-	}
-
-	private static final Log _log = LogFactoryUtil.getLog(
-		OrganizationTypesSettingsImpl.class);
 
 	private final Map<String, String>
 		_configurationPidOrganizationTypeConfigurationName = new HashMap<>();
@@ -183,7 +166,5 @@ public class OrganizationTypesSettingsImpl
 	private final Map<String, OrganizationTypeConfiguration>
 		_organizationTypeConfigurationNameOrganizationTypeConfiguration =
 			new HashMap<>();
-	private ServiceTrackerMap<String, OrganizationTypeConfigurationWrapper>
-		_organizationTypeConfigurationWrapperServiceTrackerMap;
 
 }
