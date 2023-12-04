@@ -20,7 +20,7 @@ import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
 import com.liferay.portal.kernel.module.util.SystemBundleUtil;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
-import com.liferay.portal.remote.jaxrs.whiteboard.lifecycle.JAXRSLifecycle;
+import com.liferay.portal.remote.jaxrs.whiteboard.util.JAXRSLifecycleUtil;
 import com.liferay.portal.test.rule.LiferayUnitTestRule;
 import com.liferay.portal.util.PropsImpl;
 
@@ -450,15 +450,16 @@ public class ScopeLocatorImplTest {
 					});
 			}
 
-			ReflectionTestUtil.setFieldValue(
-				_scopeLocatorImpl, "_jaxrsLifecycle",
-				new JAXRSLifecycle() {
+			try (MockedStatic<JAXRSLifecycleUtil>
+					jaxrsLifecycleUtilMockedStatic = Mockito.mockStatic(
+						JAXRSLifecycleUtil.class)) {
 
-					@Override
-					public void ensureReady() {
-					}
-
-				});
+				jaxrsLifecycleUtilMockedStatic.when(
+					JAXRSLifecycleUtil::ensureReady
+				).then(
+					invocationOnMock -> null
+				);
+			}
 
 			return _scopeLocatorImpl;
 		}
