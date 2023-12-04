@@ -18,7 +18,6 @@ import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Shuyang Zhou
@@ -28,8 +27,8 @@ public class JAXRSActivationFilterTracker {
 
 	@Activate
 	protected void activate(BundleContext bundleContext) {
+		_jaxrsLifecycle = JAXRSLifecycle.getInstance();
 		_countDownLatch = new CountDownLatch(1);
-
 		_filterServiceRegistration = bundleContext.registerService(
 			Filter.class, new JAXRSActivationFilter(bundleContext, this),
 			HashMapDictionaryBuilder.<String, Object>put(
@@ -47,6 +46,7 @@ public class JAXRSActivationFilterTracker {
 
 	@Deactivate
 	protected synchronized void deactivate() {
+		_jaxrsLifecycle.ensureUnready();
 		_unregister();
 	}
 
@@ -73,8 +73,6 @@ public class JAXRSActivationFilterTracker {
 
 	private CountDownLatch _countDownLatch;
 	private ServiceRegistration<Filter> _filterServiceRegistration;
-
-	@Reference
 	private JAXRSLifecycle _jaxrsLifecycle;
 
 }

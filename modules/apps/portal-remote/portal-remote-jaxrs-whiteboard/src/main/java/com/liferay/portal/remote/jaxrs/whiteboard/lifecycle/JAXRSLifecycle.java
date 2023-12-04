@@ -1,5 +1,5 @@
 /**
- * SPDX-FileCopyrightText: (c) 2000 Liferay, Inc. https://liferay.com
+ * SPDX-FileCopyrightText: (c) 2023 Liferay, Inc. https://liferay.com
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
@@ -10,37 +10,40 @@ import com.liferay.portal.kernel.util.MapUtil;
 
 import org.apache.aries.jax.rs.whiteboard.WhiteboardUtil;
 
-import org.osgi.framework.BundleContext;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceRegistration;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
 
 /**
  * @author Stian Sigvartsen
  */
-@Component(service = JAXRSLifecycle.class)
 public class JAXRSLifecycle {
 
+	public static JAXRSLifecycle getInstance() {
+		if (_jaxrsLifecycle == null) {
+			_jaxrsLifecycle = new JAXRSLifecycle();
+		}
+
+		return _jaxrsLifecycle;
+	}
+
 	public void ensureReady() {
+		Bundle bundle = FrameworkUtil.getBundle(JAXRSLifecycle.class);
+
 		_serviceRegistrationDCLSingleton.getSingleton(
 			() -> {
 				WhiteboardUtil.start();
 
-				return _bundleContext.registerService(
+				return bundle.getBundleContext(
+				).registerService(
 					Object.class, new Object(),
 					MapUtil.singletonDictionary(
-						"liferay.jaxrs.whiteboard.ready", true));
+						"liferay.jaxrs.whiteboard.ready", true)
+				);
 			});
 	}
 
-	@Activate
-	protected void activate(BundleContext bundleContext) {
-		_bundleContext = bundleContext;
-	}
-
-	@Deactivate
-	protected void deactivate() {
+	public void ensureUnready() {
 		_serviceRegistrationDCLSingleton.destroy(
 			serviceRegistration -> {
 				serviceRegistration.unregister();
@@ -49,7 +52,11 @@ public class JAXRSLifecycle {
 			});
 	}
 
-	private BundleContext _bundleContext;
+	private JAXRSLifecycle() {
+	}
+
+	private static JAXRSLifecycle _jaxrsLifecycle;
+
 	private final DCLSingleton<ServiceRegistration<?>>
 		_serviceRegistrationDCLSingleton = new DCLSingleton<>();
 

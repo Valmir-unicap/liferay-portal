@@ -301,6 +301,7 @@ public class ScopeLocatorImpl implements ScopeLocator {
 
 	@Activate
 	protected void activate(BundleContext bundleContext) {
+		_jaxrsLifecycle = JAXRSLifecycle.getInstance();
 		_bundleContext = bundleContext;
 
 		setPrefixHandlerFactoriesScopedServiceTrackerMap(
@@ -365,8 +366,9 @@ public class ScopeLocatorImpl implements ScopeLocator {
 
 	@Deactivate
 	protected void deactivate() {
-		_scopeFinderByNameServiceTrackerMap.close();
+		_jaxrsLifecycle.ensureUnready();
 		_prefixHandlerFactoriesScopedServiceTrackerMap.close();
+		_scopeFinderByNameServiceTrackerMap.close();
 		_scopeFindersScopedServiceTrackerMap.close();
 		_scopeLocatorConfigurationProvidersScopedServiceTrackerMap.close();
 		_scopeMappersScopedServiceTrackerMap.close();
@@ -500,9 +502,7 @@ public class ScopeLocatorImpl implements ScopeLocator {
 	@Reference(name = "default")
 	private ScopeMatcherFactory _defaultScopeMatcherFactory;
 
-	@Reference
 	private JAXRSLifecycle _jaxrsLifecycle;
-
 	private ScopedServiceTrackerMap<PrefixHandlerFactory>
 		_prefixHandlerFactoriesScopedServiceTrackerMap;
 	private ServiceTrackerMap

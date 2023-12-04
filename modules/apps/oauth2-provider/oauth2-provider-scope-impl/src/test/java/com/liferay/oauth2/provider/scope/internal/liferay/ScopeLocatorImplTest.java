@@ -450,15 +450,11 @@ public class ScopeLocatorImplTest {
 					});
 			}
 
+			JAXRSLifecycle mockJAXRSLifecycle = Mockito.mock(
+				JAXRSLifecycle.class);
+
 			ReflectionTestUtil.setFieldValue(
-				_scopeLocatorImpl, "_jaxrsLifecycle",
-				new JAXRSLifecycle() {
-
-					@Override
-					public void ensureReady() {
-					}
-
-				});
+				_scopeLocatorImpl, "_jaxrsLifecycle", mockJAXRSLifecycle);
 
 			return _scopeLocatorImpl;
 		}

@@ -23,7 +23,7 @@ import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.jaxrs.runtime.JaxrsServiceRuntime;
 import org.osgi.service.jaxrs.runtime.dto.ApplicationDTO;
 import org.osgi.service.jaxrs.runtime.dto.BaseDTO;
@@ -128,7 +128,13 @@ public class JaxRsServiceRuntimeOSGiCommands implements OSGiCommands {
 
 	@Activate
 	protected void activate(BundleContext bundleContext) {
+		_jaxrsLifecycle = JAXRSLifecycle.getInstance();
 		_bundleContext = bundleContext;
+	}
+
+	@Deactivate
+	protected void deactivate() {
+		_jaxrsLifecycle.ensureUnready();
 	}
 
 	protected BaseDTO getDTOByName(
@@ -447,8 +453,6 @@ public class JaxRsServiceRuntimeOSGiCommands implements OSGiCommands {
 			JaxRsServiceRuntimeOSGiCommands.class, JaxrsServiceRuntime.class);
 
 	private BundleContext _bundleContext;
-
-	@Reference
 	private JAXRSLifecycle _jaxrsLifecycle;
 
 }
