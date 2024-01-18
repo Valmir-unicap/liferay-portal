@@ -12,9 +12,10 @@ import com.liferay.portal.kernel.model.ModelListener;
 import com.liferay.portal.search.tuning.rankings.web.internal.constants.ResultRankingsConstants;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.Ranking;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexReader;
+import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexWriter;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexName;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexNameBuilder;
-import com.liferay.portal.search.tuning.rankings.web.internal.storage.RankingStorageAdapter;
+import com.liferay.portal.search.tuning.rankings.web.internal.util.RankingStorageAdapterUtil;
 
 import java.util.List;
 
@@ -49,8 +50,9 @@ public class GroupModelListener extends BaseModelListener<Group> {
 				rankingBuilder.status(
 					ResultRankingsConstants.STATUS_NOT_APPLICABLE);
 
-				_rankingStorageAdapter.update(
-					rankingBuilder.build(), rankingIndexName);
+				RankingStorageAdapterUtil.update(
+					rankingBuilder.build(), rankingIndexName,
+					_rankingIndexWriter);
 			}
 		}
 		catch (PortalException portalException) {
@@ -65,6 +67,6 @@ public class GroupModelListener extends BaseModelListener<Group> {
 	private RankingIndexReader _rankingIndexReader;
 
 	@Reference
-	private RankingStorageAdapter _rankingStorageAdapter;
+	private RankingIndexWriter _rankingIndexWriter;
 
 }

@@ -3,24 +3,22 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-package com.liferay.portal.search.tuning.rankings.web.internal.storage;
+package com.liferay.portal.search.tuning.rankings.web.internal.util;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.Ranking;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexWriter;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexName;
-import com.liferay.portal.search.tuning.rankings.web.internal.util.RankingJSONStorageUtil;
-
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Bryan Engler
  */
-@Component(service = RankingStorageAdapter.class)
-public class RankingStorageAdapter {
+public class RankingStorageAdapterUtil {
 
-	public String create(Ranking ranking, RankingIndexName rankingIndexName) {
+	public static String create(
+		Ranking ranking, RankingIndexName rankingIndexName,
+		RankingIndexWriter rankingIndexWriter) {
+
 		String rankingDocumentId = RankingJSONStorageUtil.addJSONStorageEntry(
 			ranking);
 
@@ -34,8 +32,9 @@ public class RankingStorageAdapter {
 		return rankingDocumentId;
 	}
 
-	public void delete(
-			String rankingDocumentId, RankingIndexName rankingIndexName)
+	public static void delete(
+			String rankingDocumentId, RankingIndexName rankingIndexName,
+			RankingIndexWriter rankingIndexWriter)
 		throws PortalException {
 
 		RankingJSONStorageUtil.deleteJSONStorageEntry(rankingDocumentId);
@@ -43,15 +42,14 @@ public class RankingStorageAdapter {
 		rankingIndexWriter.remove(rankingIndexName, rankingDocumentId);
 	}
 
-	public void update(Ranking ranking, RankingIndexName rankingIndexName)
+	public static void update(
+			Ranking ranking, RankingIndexName rankingIndexName,
+			RankingIndexWriter rankingIndexWriter)
 		throws PortalException {
 
 		RankingJSONStorageUtil.updateJSONStorageEntry(ranking);
 
 		rankingIndexWriter.update(rankingIndexName, ranking);
 	}
-
-	@Reference
-	protected RankingIndexWriter rankingIndexWriter;
 
 }

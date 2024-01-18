@@ -59,8 +59,8 @@ public class EditRankingMVCActionCommandTest
 			_editRankingMVCActionCommand, "rankingIndexReader",
 			rankingIndexReader);
 		ReflectionTestUtil.setFieldValue(
-			_editRankingMVCActionCommand, "rankingStorageAdapter",
-			rankingStorageAdapter);
+			_editRankingMVCActionCommand, "_rankingIndexWriter",
+			rankingIndexWriter);
 	}
 
 	@Test
