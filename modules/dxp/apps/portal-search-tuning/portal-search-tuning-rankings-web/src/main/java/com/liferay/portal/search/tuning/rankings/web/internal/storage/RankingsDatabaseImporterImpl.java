@@ -21,7 +21,7 @@ import com.liferay.portal.search.tuning.rankings.web.internal.index.DocumentToRa
 import com.liferay.portal.search.tuning.rankings.web.internal.index.Ranking;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexName;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexNameBuilder;
-import com.liferay.portal.search.tuning.rankings.web.internal.storage.helper.RankingJSONStorageHelper;
+import com.liferay.portal.search.tuning.rankings.web.internal.util.RankingJSONStorageUtil;
 
 import java.util.List;
 
@@ -65,9 +65,6 @@ public class RankingsDatabaseImporterImpl implements RankingsDatabaseImporter {
 		target = "(component.name=com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexReindexer)"
 	)
 	protected IndexReindexer rankingIndexReindexer;
-
-	@Reference
-	protected RankingJSONStorageHelper rankingJSONStorageHelper;
 
 	@Reference
 	protected SearchEngineAdapter searchEngineAdapter;
@@ -119,7 +116,7 @@ public class RankingsDatabaseImporterImpl implements RankingsDatabaseImporter {
 						ranking.getRankingDocumentId());
 			}
 
-			rankingJSONStorageHelper.addJSONStorageEntry(ranking);
+			RankingJSONStorageUtil.addJSONStorageEntry(ranking);
 		}
 
 		if (_log.isInfoEnabled()) {

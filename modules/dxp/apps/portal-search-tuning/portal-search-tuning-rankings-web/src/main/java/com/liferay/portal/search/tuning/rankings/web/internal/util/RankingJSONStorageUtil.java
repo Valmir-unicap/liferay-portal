@@ -3,49 +3,45 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-package com.liferay.portal.search.tuning.rankings.web.internal.storage.helper;
+package com.liferay.portal.search.tuning.rankings.web.internal.util;
 
-import com.liferay.counter.kernel.service.CounterLocalService;
-import com.liferay.json.storage.service.JSONStorageEntryLocalService;
+import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
+import com.liferay.json.storage.service.JSONStorageEntryLocalServiceUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactory;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
-import com.liferay.portal.kernel.service.ClassNameLocalService;
+import com.liferay.portal.kernel.service.ClassNameLocalServiceUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.Ranking;
-
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Bryan Engler
  */
-@Component(service = RankingJSONStorageHelper.class)
-public class RankingJSONStorageHelper {
+public class RankingJSONStorageUtil {
 
-	public String addJSONStorageEntry(Ranking ranking) {
-		long classPK = counterLocalService.increment();
+	public static String addJSONStorageEntry(Ranking ranking) {
+		long classPK = CounterLocalServiceUtil.increment();
 
 		String rankingDocumentId =
 			Ranking.class.getName() + "_PORTLET_" + classPK;
 
-		jsonStorageEntryLocalService.addJSONStorageEntries(
+		JSONStorageEntryLocalServiceUtil.addJSONStorageEntries(
 			CompanyThreadLocal.getCompanyId(),
-			classNameLocalService.getClassNameId(Ranking.class), classPK,
+			ClassNameLocalServiceUtil.getClassNameId(Ranking.class), classPK,
 			JSONUtil.put(
-				"aliases", _jsonFactory.createJSONArray(ranking.getAliases())
+				"aliases", JSONFactoryUtil.createJSONArray(ranking.getAliases())
 			).put(
 				"groupExternalReferenceCode",
 				ranking.getGroupExternalReferenceCode()
 			).put(
 				"hiddenDocumentIds",
-				_jsonFactory.createJSONArray(ranking.getHiddenDocumentIds())
+				JSONFactoryUtil.createJSONArray(ranking.getHiddenDocumentIds())
 			).put(
 				"indexName", ranking.getIndexName()
 			).put(
@@ -66,28 +62,30 @@ public class RankingJSONStorageHelper {
 		return rankingDocumentId;
 	}
 
-	public void deleteJSONStorageEntry(String rankingDocumentId)
+	public static void deleteJSONStorageEntry(String rankingDocumentId)
 		throws PortalException {
 
-		jsonStorageEntryLocalService.deleteJSONStorageEntries(
-			classNameLocalService.getClassNameId(Ranking.class),
+		JSONStorageEntryLocalServiceUtil.deleteJSONStorageEntries(
+			ClassNameLocalServiceUtil.getClassNameId(Ranking.class),
 			_getClassPK(rankingDocumentId));
 	}
 
-	public void updateJSONStorageEntry(Ranking ranking) throws PortalException {
+	public static void updateJSONStorageEntry(Ranking ranking)
+		throws PortalException {
+
 		long classPK = _getClassPK(ranking.getRankingDocumentId());
 
-		JSONObject jsonObject = jsonStorageEntryLocalService.getJSONObject(
-			classNameLocalService.getClassNameId(Ranking.class), classPK);
+		JSONObject jsonObject = JSONStorageEntryLocalServiceUtil.getJSONObject(
+			ClassNameLocalServiceUtil.getClassNameId(Ranking.class), classPK);
 
 		jsonObject.put(
-			"aliases", _jsonFactory.createJSONArray(ranking.getAliases())
+			"aliases", JSONFactoryUtil.createJSONArray(ranking.getAliases())
 		).put(
 			"groupExternalReferenceCode",
 			ranking.getGroupExternalReferenceCode()
 		).put(
 			"hiddenDocumentIds",
-			_jsonFactory.createJSONArray(ranking.getHiddenDocumentIds())
+			JSONFactoryUtil.createJSONArray(ranking.getHiddenDocumentIds())
 		).put(
 			"name", ranking.getName()
 		).put(
@@ -99,22 +97,15 @@ public class RankingJSONStorageHelper {
 			ranking.getSXPBlueprintExternalReferenceCode()
 		);
 
-		jsonStorageEntryLocalService.updateJSONStorageEntries(
+		JSONStorageEntryLocalServiceUtil.updateJSONStorageEntries(
 			CompanyThreadLocal.getCompanyId(),
-			classNameLocalService.getClassNameId(Ranking.class), classPK,
+			ClassNameLocalServiceUtil.getClassNameId(Ranking.class), classPK,
 			jsonObject.toString());
 	}
 
-	@Reference
-	protected ClassNameLocalService classNameLocalService;
+	private static long _getClassPK(String rankingDocumentId)
+		throws PortalException {
 
-	@Reference
-	protected CounterLocalService counterLocalService;
-
-	@Reference
-	protected JSONStorageEntryLocalService jsonStorageEntryLocalService;
-
-	private long _getClassPK(String rankingDocumentId) throws PortalException {
 		String[] parts = StringUtil.split(rankingDocumentId, "_PORTLET_");
 
 		if (parts.length != 2) {
@@ -131,8 +122,8 @@ public class RankingJSONStorageHelper {
 		return Long.valueOf(parts[1]);
 	}
 
-	private JSONArray _getPinsJSONArray(Ranking ranking) {
-		JSONArray pinsJSONArray = _jsonFactory.createJSONArray();
+	private static JSONArray _getPinsJSONArray(Ranking ranking) {
+		JSONArray pinsJSONArray = JSONFactoryUtil.createJSONArray();
 
 		for (Ranking.Pin pin : ranking.getPins()) {
 			pinsJSONArray.put(
@@ -147,9 +138,6 @@ public class RankingJSONStorageHelper {
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
-		RankingJSONStorageHelper.class);
-
-	@Reference
-	private JSONFactory _jsonFactory;
+		RankingJSONStorageUtil.class);
 
 }
