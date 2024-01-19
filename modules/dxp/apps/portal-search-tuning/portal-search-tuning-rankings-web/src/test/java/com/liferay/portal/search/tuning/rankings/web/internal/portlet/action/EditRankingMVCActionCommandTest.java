@@ -5,17 +5,22 @@
 
 package com.liferay.portal.search.tuning.rankings.web.internal.portlet.action;
 
+import com.liferay.counter.kernel.service.CounterLocalService;
+import com.liferay.json.storage.service.JSONStorageEntryLocalService;
+import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutTypePortlet;
 import com.liferay.portal.kernel.portlet.LiferayPortletURL;
 import com.liferay.portal.kernel.portlet.PortletURLFactory;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
+import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.search.tuning.rankings.web.internal.constants.ResultRankingsConstants;
+import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexWriter;
 import com.liferay.portal.test.rule.LiferayUnitTestRule;
 
 import javax.portlet.ActionRequest;
@@ -46,10 +51,21 @@ public class EditRankingMVCActionCommandTest
 		_editRankingMVCActionCommand = new EditRankingMVCActionCommand();
 
 		ReflectionTestUtil.setFieldValue(
+			_editRankingMVCActionCommand, "classNameLocalService",
+			_classNameLocalService);
+		ReflectionTestUtil.setFieldValue(
+			_editRankingMVCActionCommand, "counterLocalService",
+			_counterLocalService);
+		ReflectionTestUtil.setFieldValue(
 			_editRankingMVCActionCommand, "duplicateQueryStringsDetector",
 			duplicateQueryStringsDetector);
 		ReflectionTestUtil.setFieldValue(
 			_editRankingMVCActionCommand, "indexNameBuilder", indexNameBuilder);
+		ReflectionTestUtil.setFieldValue(
+			_editRankingMVCActionCommand, "jsonFactory", _jsonFactory);
+		ReflectionTestUtil.setFieldValue(
+			_editRankingMVCActionCommand, "jsonStorageEntryLocalService",
+			_jsonStorageEntryLocalService);
 		ReflectionTestUtil.setFieldValue(
 			_editRankingMVCActionCommand, "portal", portal);
 		ReflectionTestUtil.setFieldValue(
@@ -59,8 +75,8 @@ public class EditRankingMVCActionCommandTest
 			_editRankingMVCActionCommand, "rankingIndexReader",
 			rankingIndexReader);
 		ReflectionTestUtil.setFieldValue(
-			_editRankingMVCActionCommand, "rankingStorageAdapter",
-			rankingStorageAdapter);
+			_editRankingMVCActionCommand, "rankingIndexWriter",
+			_rankingIndexWriter);
 	}
 
 	@Test
@@ -283,6 +299,15 @@ public class EditRankingMVCActionCommandTest
 		ActionRequest.class);
 	private final ActionResponse _actionResponse = Mockito.mock(
 		ActionResponse.class);
+	private final ClassNameLocalService _classNameLocalService = Mockito.mock(
+		ClassNameLocalService.class);
+	private final CounterLocalService _counterLocalService = Mockito.mock(
+		CounterLocalService.class);
 	private EditRankingMVCActionCommand _editRankingMVCActionCommand;
+	private final JSONFactory _jsonFactory = Mockito.mock(JSONFactory.class);
+	private final JSONStorageEntryLocalService _jsonStorageEntryLocalService =
+		Mockito.mock(JSONStorageEntryLocalService.class);
+	private final RankingIndexWriter _rankingIndexWriter = Mockito.mock(
+		RankingIndexWriter.class);
 
 }
