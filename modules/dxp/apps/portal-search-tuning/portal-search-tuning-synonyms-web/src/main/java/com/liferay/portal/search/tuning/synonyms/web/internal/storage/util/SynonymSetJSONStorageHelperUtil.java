@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-package com.liferay.portal.search.tuning.synonyms.web.internal.storage.helper;
+package com.liferay.portal.search.tuning.synonyms.web.internal.storage.util;
 
 import com.liferay.counter.kernel.service.CounterLocalService;
 import com.liferay.json.storage.service.JSONStorageEntryLocalService;
@@ -13,16 +13,15 @@ import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
 
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-
 /**
  * @author Bryan Engler
  */
-@Component(service = SynonymSetJSONStorageHelper.class)
-public class SynonymSetJSONStorageHelper {
+public class SynonymSetJSONStorageHelperUtil {
 
-	public String addJSONStorageEntry(
+	public static String addJSONStorageEntry(
+		ClassNameLocalService classNameLocalService,
+		CounterLocalService counterLocalService,
+		JSONStorageEntryLocalService jsonStorageEntryLocalService,
 		long companyId, String indexName, String synonyms) {
 
 		long classPK = counterLocalService.increment();
@@ -44,17 +43,32 @@ public class SynonymSetJSONStorageHelper {
 		return synonymSetDocumentId;
 	}
 
-	public String addJSONStorageEntry(String indexName, String synonyms) {
+	public static String addJSONStorageEntry(
+		ClassNameLocalService classNameLocalService,
+		CounterLocalService counterLocalService,
+		JSONStorageEntryLocalService jsonStorageEntryLocalService,
+		String indexName, String synonyms) {
+
 		return addJSONStorageEntry(
-			CompanyThreadLocal.getCompanyId(), indexName, synonyms);
+			classNameLocalService, counterLocalService,
+			jsonStorageEntryLocalService, CompanyThreadLocal.getCompanyId(),
+			indexName, synonyms);
 	}
 
-	public void deleteJSONStorageEntry(long classPK) {
+	public static void deleteJSONStorageEntry(
+		ClassNameLocalService classNameLocalService,
+		JSONStorageEntryLocalService jsonStorageEntryLocalService,
+		long classPK) {
+
 		jsonStorageEntryLocalService.deleteJSONStorageEntries(
 			classNameLocalService.getClassNameId(SynonymSet.class), classPK);
 	}
 
-	public void updateJSONStorageEntry(long classPK, String synonyms) {
+	public static void updateJSONStorageEntry(
+		ClassNameLocalService classNameLocalService,
+		JSONStorageEntryLocalService jsonStorageEntryLocalService, long classPK,
+		String synonyms) {
+
 		JSONObject jsonObject = jsonStorageEntryLocalService.getJSONObject(
 			classNameLocalService.getClassNameId(SynonymSet.class), classPK);
 
@@ -65,14 +79,5 @@ public class SynonymSetJSONStorageHelper {
 			classNameLocalService.getClassNameId(SynonymSet.class), classPK,
 			jsonObject.toString());
 	}
-
-	@Reference
-	protected ClassNameLocalService classNameLocalService;
-
-	@Reference
-	protected CounterLocalService counterLocalService;
-
-	@Reference
-	protected JSONStorageEntryLocalService jsonStorageEntryLocalService;
 
 }

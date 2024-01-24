@@ -5,12 +5,15 @@
 
 package com.liferay.portal.search.tuning.synonyms.web.internal.storage;
 
+import com.liferay.counter.kernel.service.CounterLocalService;
+import com.liferay.json.storage.service.JSONStorageEntryLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.search.tuning.synonyms.index.name.SynonymSetIndexName;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexWriter;
-import com.liferay.portal.search.tuning.synonyms.web.internal.storage.helper.SynonymSetJSONStorageHelper;
+import com.liferay.portal.search.tuning.synonyms.web.internal.storage.util.SynonymSetJSONStorageHelperUtil;
 import com.liferay.portal.test.rule.LiferayUnitTestRule;
 
 import org.junit.Assert;
@@ -19,6 +22,7 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
 /**
@@ -36,21 +40,33 @@ public class SynonymSetStorageAdapterTest {
 		_synonymSetStorageAdapter = new SynonymSetStorageAdapter();
 
 		ReflectionTestUtil.setFieldValue(
+			_synonymSetStorageAdapter, "classNameLocalService",
+			_classNameLocalService);
+		ReflectionTestUtil.setFieldValue(
+			_synonymSetStorageAdapter, "counterLocalService",
+			_counterLocalService);
+		ReflectionTestUtil.setFieldValue(
+			_synonymSetStorageAdapter, "jsonStorageEntryLocalService",
+			_jsonStorageEntryLocalService);
+		ReflectionTestUtil.setFieldValue(
 			_synonymSetStorageAdapter, "synonymSetIndexWriter",
 			_synonymSetIndexWriter);
-		ReflectionTestUtil.setFieldValue(
-			_synonymSetStorageAdapter, "synonymSetJSONStorageHelper",
-			_synonymSetJSONStorageHelper);
 	}
 
 	@Test
 	public void testCreate() {
-		Mockito.doReturn(
+		MockedStatic<SynonymSetJSONStorageHelperUtil>
+			synonymSetJSONStorageHelperMockedStatic = Mockito.mockStatic(
+				SynonymSetJSONStorageHelperUtil.class);
+
+		synonymSetJSONStorageHelperMockedStatic.when(
+			() -> SynonymSetJSONStorageHelperUtil.addJSONStorageEntry(
+				Mockito.nullable(ClassNameLocalService.class),
+				Mockito.nullable(CounterLocalService.class),
+				Mockito.nullable(JSONStorageEntryLocalService.class),
+				Mockito.nullable(String.class), Mockito.nullable(String.class))
+		).thenReturn(
 			"synonymSetDocumentId"
-		).when(
-			_synonymSetJSONStorageHelper
-		).addJSONStorageEntry(
-			Mockito.nullable(String.class), Mockito.nullable(String.class)
 		);
 
 		Assert.assertEquals(
@@ -120,10 +136,14 @@ public class SynonymSetStorageAdapterTest {
 			Mockito.mock(SynonymSetIndexName.class), synonymSet);
 	}
 
+	private final ClassNameLocalService _classNameLocalService = Mockito.mock(
+		ClassNameLocalService.class);
+	private final CounterLocalService _counterLocalService = Mockito.mock(
+		CounterLocalService.class);
+	private final JSONStorageEntryLocalService _jsonStorageEntryLocalService =
+		Mockito.mock(JSONStorageEntryLocalService.class);
 	private final SynonymSetIndexWriter _synonymSetIndexWriter = Mockito.mock(
 		SynonymSetIndexWriter.class);
-	private final SynonymSetJSONStorageHelper _synonymSetJSONStorageHelper =
-		Mockito.mock(SynonymSetJSONStorageHelper.class);
 	private SynonymSetStorageAdapter _synonymSetStorageAdapter;
 
 }
