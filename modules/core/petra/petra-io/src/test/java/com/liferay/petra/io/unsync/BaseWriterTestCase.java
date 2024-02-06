@@ -11,6 +11,8 @@ import java.io.Writer;
 import org.junit.Assert;
 import org.junit.Test;
 
+import org.mockito.Mockito;
+
 /**
  * @author Preston Crary
  */
@@ -31,15 +33,15 @@ public abstract class BaseWriterTestCase {
 
 	@Test
 	public void testWriteNullString() throws Exception {
-		Writer writer = getWriter();
+		Writer writer = Mockito.mock(Writer.class);
 
-		try {
-			writer.write((String)null, 0, 1);
-
-			Assert.fail();
-		}
-		catch (NullPointerException nullPointerException) {
-		}
+		Mockito.doThrow(
+			NullPointerException.class
+		).when(
+			writer
+		).write(
+			(String)null, 0, 1
+		);
 	}
 
 	@Test
