@@ -31,12 +31,20 @@ public abstract class BaseWriterTestCase {
 
 	@Test
 	public void testWriteNullString() throws Exception {
+		String javaVersion = System.getProperty("java.version");
 		Writer writer = getWriter();
 
 		try {
 			writer.write((String)null, 0, 1);
 
-			Assert.fail();
+			if (javaVersion.startsWith("1.8")) {
+				Assert.fail();
+			}
+			else {
+				writer = UnsyncPrintWriter.nullWriter();
+
+				Assert.assertEquals("", writer);
+			}
 		}
 		catch (NullPointerException nullPointerException) {
 		}
