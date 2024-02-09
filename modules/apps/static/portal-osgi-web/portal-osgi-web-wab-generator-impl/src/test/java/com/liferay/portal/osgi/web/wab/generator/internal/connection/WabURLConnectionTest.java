@@ -7,6 +7,7 @@ package com.liferay.portal.osgi.web.wab.generator.internal.connection;
 
 import com.liferay.portal.kernel.security.xml.SecureXMLFactoryProviderUtil;
 import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
+import com.liferay.portal.kernel.util.PropertiesUtil;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.kernel.xml.UnsecureSAXReaderUtil;
 import com.liferay.portal.security.xml.SecureXMLFactoryProviderImpl;
@@ -86,6 +87,8 @@ public class WabURLConnectionTest {
 			new URL(
 				"webbundle:/path/to/foo?Web-ContextPath=foo&protocol=file"));
 
+		PropertiesUtil.load(wabURLConnection.getURL());
+
 		wabURLConnection.getInputStream();
 	}
 
@@ -99,6 +102,8 @@ public class WabURLConnectionTest {
 		WabURLConnection wabURLConnection = new WabURLConnection(
 			null, null,
 			new URL("webbundle:" + uriString + "?Web-ContextPath=foo"));
+
+		PropertiesUtil.load(wabURLConnection.getURL());
 
 		wabURLConnection.getInputStream();
 	}
