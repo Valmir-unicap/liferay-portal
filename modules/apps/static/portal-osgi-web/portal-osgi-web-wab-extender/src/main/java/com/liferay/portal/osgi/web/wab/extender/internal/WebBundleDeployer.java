@@ -12,6 +12,7 @@ import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.osgi.web.servlet.JSPServletFactory;
 import com.liferay.portal.osgi.web.servlet.JSPTaglibHelper;
+import com.liferay.portal.osgi.web.servlet.context.helper.ServletContextHelperRegistration;
 import com.liferay.portal.profile.PortalProfile;
 
 import java.io.IOException;
@@ -38,13 +39,14 @@ public class WebBundleDeployer {
 
 	public WebBundleDeployer(
 		BundleContext bundleContext, JSPServletFactory jspServletFactory,
-		JSPTaglibHelper jspTaglibHelper,
-		Dictionary<String, Object> properties) {
+		JSPTaglibHelper jspTaglibHelper, Dictionary<String, Object> properties,
+		ServletContextHelperRegistration servletContextHelperRegistration) {
 
 		_bundleContext = bundleContext;
 		_jspServletFactory = jspServletFactory;
 		_jspTaglibHelper = jspTaglibHelper;
 		_properties = properties;
+		_servletContextHelperRegistration = servletContextHelperRegistration;
 	}
 
 	public void close() {
@@ -123,7 +125,8 @@ public class WebBundleDeployer {
 	private void _initWabBundle(Bundle bundle) {
 		try {
 			WabBundleProcessor wabBundleProcessor = new WabBundleProcessor(
-				bundle, _jspServletFactory, _jspTaglibHelper);
+				bundle, _jspServletFactory, _jspTaglibHelper,
+				_servletContextHelperRegistration);
 
 			wabBundleProcessor.init(_properties);
 
@@ -143,6 +146,8 @@ public class WebBundleDeployer {
 	private final JSPServletFactory _jspServletFactory;
 	private final JSPTaglibHelper _jspTaglibHelper;
 	private final Dictionary<String, Object> _properties;
+	private final ServletContextHelperRegistration
+		_servletContextHelperRegistration;
 	private final ConcurrentMap<Bundle, WabBundleProcessor>
 		_wabBundleProcessors = new ConcurrentHashMap<>();
 
