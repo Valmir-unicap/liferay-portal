@@ -5,9 +5,12 @@
 
 package com.liferay.portal.search.tuning.synonyms.web.internal.storage;
 
+import com.liferay.counter.kernel.service.CounterLocalService;
+import com.liferay.json.storage.service.JSONStorageEntryLocalService;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.engine.adapter.search.SearchSearchRequest;
@@ -21,7 +24,7 @@ import com.liferay.portal.search.tuning.synonyms.index.name.SynonymSetIndexNameB
 import com.liferay.portal.search.tuning.synonyms.storage.SynonymSetsDatabaseImporter;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.DocumentToSynonymSetTranslator;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
-import com.liferay.portal.search.tuning.synonyms.web.internal.storage.helper.SynonymSetJSONStorageHelper;
+import com.liferay.portal.search.tuning.synonyms.web.internal.storage.util.SynonymSetJSONStorageHelperUtil;
 
 import java.util.List;
 
@@ -54,7 +57,16 @@ public class SynonymSetsDatabaseImporterImpl
 	}
 
 	@Reference
+	protected ClassNameLocalService classNameLocalService;
+
+	@Reference
+	protected CounterLocalService counterLocalService;
+
+	@Reference
 	protected DocumentToSynonymSetTranslator documentToSynonymSetTranslator;
+
+	@Reference
+	protected JSONStorageEntryLocalService jsonStorageEntryLocalService;
 
 	@Reference
 	protected Queries queries;
@@ -69,9 +81,6 @@ public class SynonymSetsDatabaseImporterImpl
 		target = "(component.name=com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexReindexer)"
 	)
 	protected IndexReindexer synonymSetIndexReindexer;
-
-	@Reference
-	protected SynonymSetJSONStorageHelper synonymSetJSONStorageHelper;
 
 	private boolean _isStandardFormat(String id) {
 		String[] parts = StringUtil.split(id, "_PORTLET_");
@@ -121,9 +130,10 @@ public class SynonymSetsDatabaseImporterImpl
 						synonymSet.getSynonymSetDocumentId());
 			}
 
-			synonymSetJSONStorageHelper.addJSONStorageEntry(
-				companyId, synonymSetIndexName.getIndexName(),
-				synonymSet.getSynonyms());
+			SynonymSetJSONStorageHelperUtil.addJSONStorageEntry(
+				classNameLocalService, counterLocalService,
+				jsonStorageEntryLocalService, companyId,
+				synonymSetIndexName.getIndexName(), synonymSet.getSynonyms());
 		}
 
 		if (_log.isInfoEnabled()) {

@@ -5,13 +5,15 @@
 
 package com.liferay.portal.search.tuning.synonyms.web.internal.storage;
 
+import com.liferay.counter.kernel.service.CounterLocalService;
+import com.liferay.json.storage.service.JSONStorageEntryLocalService;
+import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.search.query.Queries;
 import com.liferay.portal.search.tuning.synonyms.web.internal.BaseSynonymsWebTestCase;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.DocumentToSynonymSetTranslator;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.DocumentToSynonymSetTranslatorImpl;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexReindexer;
-import com.liferay.portal.search.tuning.synonyms.web.internal.storage.helper.SynonymSetJSONStorageHelper;
 import com.liferay.portal.test.rule.LiferayUnitTestRule;
 
 import org.junit.Before;
@@ -40,9 +42,17 @@ public class SynonymSetsDatabaseImporterImplTest
 			new DocumentToSynonymSetTranslatorImpl();
 
 		ReflectionTestUtil.setFieldValue(
+			_synonymSetsDatabaseImporterImpl, "classNameLocalService",
+			_classNameLocalService);
+		ReflectionTestUtil.setFieldValue(
+			_synonymSetsDatabaseImporterImpl, "counterLocalService",
+			_counterLocalService);
+		ReflectionTestUtil.setFieldValue(
 			_synonymSetsDatabaseImporterImpl, "documentToSynonymSetTranslator",
 			_documentToSynonymSetTranslator);
-
+		ReflectionTestUtil.setFieldValue(
+			_synonymSetsDatabaseImporterImpl, "jsonStorageEntryLocalService",
+			_jsonStorageEntryLocalService);
 		ReflectionTestUtil.setFieldValue(
 			_synonymSetsDatabaseImporterImpl, "queries", _queries);
 		ReflectionTestUtil.setFieldValue(
@@ -54,9 +64,6 @@ public class SynonymSetsDatabaseImporterImplTest
 		ReflectionTestUtil.setFieldValue(
 			_synonymSetsDatabaseImporterImpl, "synonymSetIndexReindexer",
 			_synonymSetIndexReindexer);
-		ReflectionTestUtil.setFieldValue(
-			_synonymSetsDatabaseImporterImpl, "synonymSetJSONStorageHelper",
-			_synonymSetJSONStorageHelper);
 	}
 
 	@Test
@@ -84,12 +91,16 @@ public class SynonymSetsDatabaseImporterImplTest
 		);
 	}
 
+	private final ClassNameLocalService _classNameLocalService = Mockito.mock(
+		ClassNameLocalService.class);
+	private final CounterLocalService _counterLocalService = Mockito.mock(
+		CounterLocalService.class);
 	private DocumentToSynonymSetTranslator _documentToSynonymSetTranslator;
+	private final JSONStorageEntryLocalService _jsonStorageEntryLocalService =
+		Mockito.mock(JSONStorageEntryLocalService.class);
 	private final Queries _queries = Mockito.mock(Queries.class);
 	private final SynonymSetIndexReindexer _synonymSetIndexReindexer =
 		Mockito.mock(SynonymSetIndexReindexer.class);
-	private final SynonymSetJSONStorageHelper _synonymSetJSONStorageHelper =
-		Mockito.mock(SynonymSetJSONStorageHelper.class);
 	private SynonymSetsDatabaseImporterImpl _synonymSetsDatabaseImporterImpl;
 
 }

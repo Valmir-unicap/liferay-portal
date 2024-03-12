@@ -9,12 +9,11 @@ import com.liferay.counter.kernel.service.CounterLocalService;
 import com.liferay.json.storage.service.JSONStorageEntryLocalService;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.service.ClassNameLocalService;
-import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
+import com.liferay.portal.search.tuning.synonyms.web.internal.storage.util.SynonymSetJSONStorageHelperUtil;
 import com.liferay.portal.test.rule.LiferayUnitTestRule;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -31,21 +30,6 @@ public class SynonymSetJSONStorageHelperTest {
 	public static final LiferayUnitTestRule liferayUnitTestRule =
 		LiferayUnitTestRule.INSTANCE;
 
-	@Before
-	public void setUp() throws Exception {
-		_synonymSetJSONStorageHelper = new SynonymSetJSONStorageHelper();
-
-		ReflectionTestUtil.setFieldValue(
-			_synonymSetJSONStorageHelper, "classNameLocalService",
-			_classNameLocalService);
-		ReflectionTestUtil.setFieldValue(
-			_synonymSetJSONStorageHelper, "counterLocalService",
-			_counterLocalService);
-		ReflectionTestUtil.setFieldValue(
-			_synonymSetJSONStorageHelper, "jsonStorageEntryLocalService",
-			_jsonStorageEntryLocalService);
-	}
-
 	@Test
 	public void testAddJSONStorageEntry() {
 		_setUpCounterLocalService();
@@ -53,13 +37,16 @@ public class SynonymSetJSONStorageHelperTest {
 		Assert.assertEquals(
 			"com.liferay.portal.search.tuning.synonyms.web.internal.index." +
 				"SynonymSet_PORTLET_1234",
-			_synonymSetJSONStorageHelper.addJSONStorageEntry(
-				111L, "indexName", "car,automobile"));
+			SynonymSetJSONStorageHelperUtil.addJSONStorageEntry(
+				_classNameLocalService, _counterLocalService,
+				_jsonStorageEntryLocalService, 111L, "indexName",
+				"car,automobile"));
 	}
 
 	@Test
 	public void testDeleteJSONStorageEntry() {
-		_synonymSetJSONStorageHelper.deleteJSONStorageEntry(1234L);
+		SynonymSetJSONStorageHelperUtil.deleteJSONStorageEntry(
+			_classNameLocalService, _jsonStorageEntryLocalService, 1234L);
 
 		Mockito.verify(
 			_classNameLocalService, Mockito.times(1)
@@ -77,8 +64,9 @@ public class SynonymSetJSONStorageHelperTest {
 	public void testUpdateJSONStorageEntry() {
 		_setUpJSONStorageEntryLocalService();
 
-		_synonymSetJSONStorageHelper.updateJSONStorageEntry(
-			1234L, "car,automobile");
+		SynonymSetJSONStorageHelperUtil.updateJSONStorageEntry(
+			_classNameLocalService, _jsonStorageEntryLocalService, 1234L,
+			"car,automobile");
 
 		Mockito.verify(
 			_classNameLocalService, Mockito.times(2)
@@ -117,6 +105,5 @@ public class SynonymSetJSONStorageHelperTest {
 		CounterLocalService.class);
 	private final JSONStorageEntryLocalService _jsonStorageEntryLocalService =
 		Mockito.mock(JSONStorageEntryLocalService.class);
-	private SynonymSetJSONStorageHelper _synonymSetJSONStorageHelper;
 
 }

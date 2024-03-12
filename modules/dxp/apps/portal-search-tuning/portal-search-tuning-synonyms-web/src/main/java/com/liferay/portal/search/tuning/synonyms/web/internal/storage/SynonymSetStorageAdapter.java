@@ -5,15 +5,18 @@
 
 package com.liferay.portal.search.tuning.synonyms.web.internal.storage;
 
+import com.liferay.counter.kernel.service.CounterLocalService;
+import com.liferay.json.storage.service.JSONStorageEntryLocalService;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.tuning.synonyms.index.name.SynonymSetIndexName;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexWriter;
-import com.liferay.portal.search.tuning.synonyms.web.internal.storage.helper.SynonymSetJSONStorageHelper;
+import com.liferay.portal.search.tuning.synonyms.web.internal.storage.util.SynonymSetJSONStorageHelperUtil;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -28,7 +31,9 @@ public class SynonymSetStorageAdapter {
 		SynonymSetIndexName synonymSetIndexName, SynonymSet synonymSet) {
 
 		String synonymSetDocumentId =
-			synonymSetJSONStorageHelper.addJSONStorageEntry(
+			SynonymSetJSONStorageHelperUtil.addJSONStorageEntry(
+				classNameLocalService, counterLocalService,
+				jsonStorageEntryLocalService,
 				synonymSetIndexName.getIndexName(), synonymSet.getSynonyms());
 
 		SynonymSet.SynonymSetBuilder synonymSetBuilder =
@@ -47,7 +52,8 @@ public class SynonymSetStorageAdapter {
 			String synonymSetDocumentId)
 		throws PortalException {
 
-		synonymSetJSONStorageHelper.deleteJSONStorageEntry(
+		SynonymSetJSONStorageHelperUtil.deleteJSONStorageEntry(
+			classNameLocalService, jsonStorageEntryLocalService,
 			_getClassPK(synonymSetDocumentId));
 
 		synonymSetIndexWriter.remove(synonymSetIndexName, synonymSetDocumentId);
@@ -57,7 +63,8 @@ public class SynonymSetStorageAdapter {
 			SynonymSetIndexName synonymSetIndexName, SynonymSet synonymSet)
 		throws PortalException {
 
-		synonymSetJSONStorageHelper.updateJSONStorageEntry(
+		SynonymSetJSONStorageHelperUtil.updateJSONStorageEntry(
+			classNameLocalService, jsonStorageEntryLocalService,
 			_getClassPK(synonymSet.getSynonymSetDocumentId()),
 			synonymSet.getSynonyms());
 
@@ -65,10 +72,16 @@ public class SynonymSetStorageAdapter {
 	}
 
 	@Reference
-	protected SynonymSetIndexWriter synonymSetIndexWriter;
+	protected ClassNameLocalService classNameLocalService;
 
 	@Reference
-	protected SynonymSetJSONStorageHelper synonymSetJSONStorageHelper;
+	protected CounterLocalService counterLocalService;
+
+	@Reference
+	protected JSONStorageEntryLocalService jsonStorageEntryLocalService;
+
+	@Reference
+	protected SynonymSetIndexWriter synonymSetIndexWriter;
 
 	private long _getClassPK(String synonymSetDocumentId)
 		throws PortalException {
