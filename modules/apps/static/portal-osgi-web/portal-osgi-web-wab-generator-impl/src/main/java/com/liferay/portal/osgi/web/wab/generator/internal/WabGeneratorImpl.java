@@ -11,6 +11,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.HashMapDictionaryBuilder;
 import com.liferay.portal.kernel.util.HttpComponentsUtil;
+import com.liferay.portal.osgi.web.wab.generator.WabGenerator;
 import com.liferay.portal.osgi.web.wab.generator.internal.artifact.ArtifactURLUtil;
 import com.liferay.portal.osgi.web.wab.generator.internal.artifact.WarArtifactUrlTransformer;
 import com.liferay.portal.osgi.web.wab.generator.internal.handler.WabURLStreamHandlerService;
@@ -55,11 +56,8 @@ import org.osgi.util.tracker.BundleTracker;
  * @author Miguel Pastor
  * @author Raymond Augé
  */
-@Component(
-	service = com.liferay.portal.osgi.web.wab.generator.WabGenerator.class
-)
-public class WabGenerator
-	implements com.liferay.portal.osgi.web.wab.generator.WabGenerator {
+@Component(service = WabGenerator.class)
+public class WabGeneratorImpl implements WabGenerator {
 
 	@Override
 	public File generate(
@@ -231,7 +229,8 @@ public class WabGenerator
 			).build());
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(WabGenerator.class);
+	private static final Log _log = LogFactoryUtil.getLog(
+		WabGeneratorImpl.class);
 
 	private ServiceRegistration<FileInstaller> _serviceRegistration;
 
