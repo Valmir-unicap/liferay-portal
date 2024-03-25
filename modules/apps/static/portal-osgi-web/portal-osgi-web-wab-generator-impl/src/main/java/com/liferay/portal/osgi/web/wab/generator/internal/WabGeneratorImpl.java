@@ -29,7 +29,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -43,11 +45,12 @@ import javax.servlet.ServletContext;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.url.URLConstants;
 import org.osgi.service.url.URLStreamHandlerService;
 import org.osgi.util.tracker.BundleTracker;
@@ -79,6 +82,8 @@ public class WabGeneratorImpl implements WabGenerator {
 
 		DependencyManagerSyncUtil.registerSyncCallable(
 			() -> {
+				_registerServletContextService(bundleContext);
+
 				Set<String> requiredForStartupContextPaths =
 					_getRequiredForStartupContextPaths(
 						Paths.get(PropsValues.LIFERAY_HOME, "osgi/portal-war"));
@@ -214,6 +219,26 @@ public class WabGeneratorImpl implements WabGenerator {
 			FileInstaller.class, new WarArtifactUrlTransformer(), null);
 	}
 
+	private void _registerServletContextService(BundleContext bundleContext) {
+		try {
+			Collection<ServiceReference<ServletContext>> serviceReferences =
+				bundleContext.getServiceReferences(
+					ServletContext.class,
+					"(&(original.bean=true)" +
+						"(bean.id=javax.servlet.ServletContext))");
+
+			Iterator<ServiceReference<ServletContext>> iterator =
+				serviceReferences.iterator();
+
+			bundleContext.getService(iterator.next());
+		}
+		catch (InvalidSyntaxException invalidSyntaxException) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(invalidSyntaxException);
+			}
+		}
+	}
+
 	private void _registerURLStreamHandlerService(BundleContext bundleContext) {
 		Bundle bundle = bundleContext.getBundle(0);
 
@@ -233,10 +258,5 @@ public class WabGeneratorImpl implements WabGenerator {
 		WabGeneratorImpl.class);
 
 	private ServiceRegistration<FileInstaller> _serviceRegistration;
-
-	@Reference(
-		target = "(&(original.bean=true)(bean.id=javax.servlet.ServletContext))"
-	)
-	private ServletContext _servletContext;
 
 }
