@@ -7,6 +7,7 @@ package com.liferay.portal.properties.swapper.internal.portal.profile;
 
 import com.liferay.document.library.kernel.store.Store;
 import com.liferay.portal.kernel.module.framework.ModuleServiceLifecycle;
+import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.profile.BaseDSModulePortalProfile;
 import com.liferay.portal.profile.PortalProfile;
 import com.liferay.portal.properties.swapper.internal.DefaultCompanyLogoSwapper;
@@ -17,6 +18,9 @@ import com.liferay.portal.properties.swapper.internal.SwapDefaultGuestGroupLogoP
 
 import java.util.Collections;
 
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -30,6 +34,13 @@ public class ModulePortalProfile extends BaseDSModulePortalProfile {
 
 	@Activate
 	protected void activate(ComponentContext componentContext) {
+		Bundle bundle = FrameworkUtil.getBundle(ModulePortalProfile.class);
+
+		BundleContext bundleContext = bundle.getBundleContext();
+
+		bundleContext.registerService(Store.class, _store, MapUtil.
+			singletonDictionary("default", "true"));
+
 		init(
 			componentContext,
 			Collections.singleton(PortalProfile.PORTAL_PROFILE_NAME_DXP),
@@ -44,7 +55,6 @@ public class ModulePortalProfile extends BaseDSModulePortalProfile {
 	@Reference(target = ModuleServiceLifecycle.PORTAL_INITIALIZED, unbind = "-")
 	private ModuleServiceLifecycle _moduleServiceLifecycle;
 
-	@Reference(target = "(default=true)")
 	private Store _store;
 
 }
