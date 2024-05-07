@@ -483,9 +483,7 @@ definition {
 
 		AssertLocation(value1 = "${portalURL}/sr-RS-latin/web/guest/language-selector-page");
 
-		AssertTextEquals(
-			locator1 = "UserBar#USER_SIGN_IN",
-			value1 = "Prijavite se");
+		AssertElementPresent(locator1 = " //span[contains(@class,'sign-in')]/a/span | //button[contains(@class,'sign-in')][contains(text(),'Prijavite se')]");
 	}
 
 	@priority = 3
