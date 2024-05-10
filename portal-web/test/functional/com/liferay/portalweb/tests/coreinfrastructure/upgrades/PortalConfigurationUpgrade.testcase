@@ -10,6 +10,8 @@ definition {
 	property test.run.type = "single";
 	property testray.main.component.name = "Portal Configuration";
 
+	var password = PropsUtil.get("default.admin.password");
+
 	setUp {
 		var portalURL = PropsUtil.get("portal.url");
 
@@ -23,11 +25,11 @@ definition {
 
 		Type(
 			locator1 = "TextInput#SCREEN_NAME",
-			value1 = "test");
+			value1 = ${password});
 
 		Type.typePause(
 			locator1 = "TextInput#PASSWORD",
-			value1 = "test");
+			value1 = ${password});
 
 		AssertClick(
 			buttonId = "LoginPortlet",
