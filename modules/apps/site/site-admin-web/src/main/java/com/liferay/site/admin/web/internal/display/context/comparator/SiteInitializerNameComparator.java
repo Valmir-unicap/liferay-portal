@@ -5,17 +5,18 @@
 
 package com.liferay.site.admin.web.internal.display.context.comparator;
 
-import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.site.admin.web.internal.util.SiteInitializerItem;
+
+import java.util.Comparator;
 
 /**
  * @author Marco Leo
  */
 public class SiteInitializerNameComparator
-	extends OrderByComparator<SiteInitializerItem> {
+	implements Comparator<SiteInitializerItem> {
 
-	public SiteInitializerNameComparator(boolean ascending) {
-		_ascending = ascending;
+	public static SiteInitializerNameComparator getInstance(boolean ascending) {
+		return _ASCENDING;
 	}
 
 	@Override
@@ -35,10 +36,12 @@ public class SiteInitializerNameComparator
 		return -value;
 	}
 
-	@Override
-	public boolean isAscending() {
-		return _ascending;
+	private SiteInitializerNameComparator(boolean ascending) {
+		_ascending = ascending;
 	}
+
+	private static final SiteInitializerNameComparator _ASCENDING =
+		new SiteInitializerNameComparator(true);
 
 	private final boolean _ascending;
 
