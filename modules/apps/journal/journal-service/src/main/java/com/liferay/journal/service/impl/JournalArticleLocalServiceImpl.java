@@ -1467,7 +1467,7 @@ public class JournalArticleLocalServiceImpl
 		try {
 			List<JournalArticle> articles = journalArticlePersistence.findByG_A(
 				groupId, articleId, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
-				new ArticleVersionComparator(true));
+				ArticleVersionComparator.getInstance(true));
 
 			for (JournalArticle article : articles) {
 				assetTitle = article.getTitle(article.getDefaultLanguageId());
@@ -1743,7 +1743,7 @@ public class JournalArticleLocalServiceImpl
 		if (isExpireAllArticleVersions(user.getCompanyId())) {
 			List<JournalArticle> articles = journalArticlePersistence.findByG_A(
 				groupId, articleId, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
-				new ArticleVersionComparator(true));
+				ArticleVersionComparator.getInstance(true));
 
 			for (JournalArticle article : articles) {
 				if (!article.isExpired()) {
@@ -1925,7 +1925,7 @@ public class JournalArticleLocalServiceImpl
 		JournalArticle article = null;
 
 		OrderByComparator<JournalArticle> orderByComparator =
-			new ArticleVersionComparator(false);
+			ArticleVersionComparator.getInstance(false);
 
 		if (status == WorkflowConstants.STATUS_ANY) {
 			if (preferApproved) {
@@ -1953,7 +1953,7 @@ public class JournalArticleLocalServiceImpl
 		long resourcePrimKey, int[] statuses) {
 
 		OrderByComparator<JournalArticle> orderByComparator =
-			new ArticleVersionComparator(false);
+			ArticleVersionComparator.getInstance(false);
 
 		List<JournalArticle> articles = journalArticlePersistence.findByR_ST(
 			resourcePrimKey, statuses, 0, 1, orderByComparator);
@@ -1982,7 +1982,7 @@ public class JournalArticleLocalServiceImpl
 		long groupId, String articleId, int status) {
 
 		OrderByComparator<JournalArticle> orderByComparator =
-			new ArticleVersionComparator(false);
+			ArticleVersionComparator.getInstance(false);
 
 		if (status == WorkflowConstants.STATUS_ANY) {
 			return journalArticlePersistence.fetchByG_A_NotST_First(
@@ -2009,7 +2009,7 @@ public class JournalArticleLocalServiceImpl
 		long groupId, String externalReferenceCode) {
 
 		OrderByComparator<JournalArticle> orderByComparator =
-			new ArticleVersionComparator(false);
+			ArticleVersionComparator.getInstance(false);
 
 		return journalArticlePersistence.fetchByG_ERC_First(
 			groupId, externalReferenceCode, orderByComparator);
@@ -2038,7 +2038,7 @@ public class JournalArticleLocalServiceImpl
 		List<JournalArticle> articles = null;
 
 		OrderByComparator<JournalArticle> orderByComparator =
-			new ArticleVersionComparator(false);
+			ArticleVersionComparator.getInstance(false);
 
 		if (status == WorkflowConstants.STATUS_ANY) {
 			articles = journalArticlePersistence.findByG_UT(
@@ -2070,7 +2070,7 @@ public class JournalArticleLocalServiceImpl
 	@Override
 	public JournalArticle fetchLatestIndexableArticle(long resourcePrimKey) {
 		OrderByComparator<JournalArticle> orderByComparator =
-			new ArticleVersionComparator(false);
+			ArticleVersionComparator.getInstance(false);
 
 		List<JournalArticle> articles = journalArticlePersistence.findByR_I_S(
 			resourcePrimKey, true,
@@ -3286,13 +3286,13 @@ public class JournalArticleLocalServiceImpl
 			articles = journalArticlePersistence.findByR_ST(
 				friendlyURLEntry.getClassPK(),
 				WorkflowConstants.STATUS_APPROVED, QueryUtil.ALL_POS,
-				QueryUtil.ALL_POS, new ArticleVersionComparator(false));
+				QueryUtil.ALL_POS, ArticleVersionComparator.getInstance(false));
 		}
 		else {
 			articles = journalArticlePersistence.findByG_UT_ST(
 				groupId, _friendlyURLNormalizer.normalizeWithEncoding(urlTitle),
 				WorkflowConstants.STATUS_APPROVED, QueryUtil.ALL_POS,
-				QueryUtil.ALL_POS, new ArticleVersionComparator(false));
+				QueryUtil.ALL_POS, ArticleVersionComparator.getInstance(false));
 		}
 
 		if (articles.isEmpty()) {
@@ -3401,7 +3401,7 @@ public class JournalArticleLocalServiceImpl
 		List<JournalArticle> articles = null;
 
 		OrderByComparator<JournalArticle> orderByComparator =
-			new ArticleVersionComparator(false);
+			ArticleVersionComparator.getInstance(false);
 
 		if (status == WorkflowConstants.STATUS_ANY) {
 			if (preferApproved) {
@@ -3463,7 +3463,8 @@ public class JournalArticleLocalServiceImpl
 		throws PortalException {
 
 		return getFirstArticle(
-			groupId, articleId, status, new ArticleVersionComparator(false));
+			groupId, articleId, status,
+			ArticleVersionComparator.getInstance(false));
 	}
 
 	/**
@@ -3489,7 +3490,7 @@ public class JournalArticleLocalServiceImpl
 
 		List<JournalArticle> articles = journalArticlePersistence.findByG_C_C(
 			groupId, _classNameLocalService.getClassNameId(className), classPK,
-			0, 1, new ArticleVersionComparator(false));
+			0, 1, ArticleVersionComparator.getInstance(false));
 
 		if (articles.isEmpty()) {
 			throw new NoSuchArticleException(
@@ -3517,7 +3518,7 @@ public class JournalArticleLocalServiceImpl
 		throws PortalException {
 
 		OrderByComparator<JournalArticle> orderByComparator =
-			new ArticleVersionComparator(false);
+			ArticleVersionComparator.getInstance(false);
 
 		return journalArticlePersistence.findByG_ERC_First(
 			groupId, externalReferenceCode, orderByComparator);
@@ -3698,7 +3699,8 @@ public class JournalArticleLocalServiceImpl
 		throws PortalException {
 
 		return getFirstArticle(
-			groupId, articleId, status, new ArticleVersionComparator(true));
+			groupId, articleId, status,
+			ArticleVersionComparator.getInstance(true));
 	}
 
 	/**
@@ -4185,7 +4187,7 @@ public class JournalArticleLocalServiceImpl
 				article.getGroupId(), article.getArticleId());
 
 		articleVersions = ListUtil.sort(
-			articleVersions, new ArticleVersionComparator(false));
+			articleVersions, ArticleVersionComparator.getInstance(false));
 
 		List<ObjectValuePair<Long, Integer>> articleVersionStatusOVPs =
 			new ArrayList<>();
@@ -4283,7 +4285,8 @@ public class JournalArticleLocalServiceImpl
 		throws PortalException {
 
 		List<JournalArticle> articles = journalArticlePersistence.findByG_A(
-			groupId, articleId, 0, 1, new ArticleVersionComparator(false));
+			groupId, articleId, 0, 1,
+			ArticleVersionComparator.getInstance(false));
 
 		if (!articles.isEmpty()) {
 			return journalArticleLocalService.moveArticleToTrash(
@@ -7247,7 +7250,7 @@ public class JournalArticleLocalServiceImpl
 		throws PortalException {
 
 		JournalArticle firstArticle = journalArticlePersistence.findByG_A_First(
-			groupId, articleId, new ArticleVersionComparator(false));
+			groupId, articleId, ArticleVersionComparator.getInstance(false));
 
 		String firstArticleUrlTitle = firstArticle.getUrlTitle();
 
