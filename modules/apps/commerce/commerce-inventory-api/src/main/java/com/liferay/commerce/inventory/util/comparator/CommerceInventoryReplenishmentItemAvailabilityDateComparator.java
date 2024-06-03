@@ -21,10 +21,14 @@ public class CommerceInventoryReplenishmentItemAvailabilityDateComparator
 
 	public static final String[] ORDER_BY_FIELDS = {"availabilityDate"};
 
-	public CommerceInventoryReplenishmentItemAvailabilityDateComparator(
-		boolean ascending) {
+	public static CommerceInventoryReplenishmentItemAvailabilityDateComparator
+		getInstance(boolean ascending) {
 
-		_ascending = ascending;
+		if (ascending) {
+			return _INSTANCE_ASCENDING;
+		}
+
+		return _INSTANCE_DESCENDING;
 	}
 
 	@Override
@@ -62,6 +66,24 @@ public class CommerceInventoryReplenishmentItemAvailabilityDateComparator
 	public boolean isAscending() {
 		return _ascending;
 	}
+
+	private CommerceInventoryReplenishmentItemAvailabilityDateComparator(
+		boolean ascending) {
+
+		_ascending = ascending;
+	}
+
+	private static final
+		CommerceInventoryReplenishmentItemAvailabilityDateComparator
+			_INSTANCE_ASCENDING =
+				new CommerceInventoryReplenishmentItemAvailabilityDateComparator(
+					true);
+
+	private static final
+		CommerceInventoryReplenishmentItemAvailabilityDateComparator
+			_INSTANCE_DESCENDING =
+				new CommerceInventoryReplenishmentItemAvailabilityDateComparator(
+					false);
 
 	private final boolean _ascending;
 
