@@ -21,10 +21,6 @@ public class CommerceInventoryReplenishmentItemAvailabilityDateComparator
 
 	public static final String[] ORDER_BY_FIELDS = {"availabilityDate"};
 
-	public CommerceInventoryReplenishmentItemAvailabilityDateComparator() {
-		this(true);
-	}
-
 	public CommerceInventoryReplenishmentItemAvailabilityDateComparator(
 		boolean ascending) {
 
