@@ -28,10 +28,14 @@ public class CommerceInventoryWarehouseItemWarehouseNameComparator
 		"CommerceInventoryWarehouse.name"
 	};
 
-	public CommerceInventoryWarehouseItemWarehouseNameComparator(
-		boolean ascending) {
+	public static CommerceInventoryWarehouseItemWarehouseNameComparator
+		getInstance(boolean ascending) {
 
-		_ascending = ascending;
+		if (ascending) {
+			return _INSTANCE_ASCENDING;
+		}
+
+		return _INSTANCE_DESCENDING;
 	}
 
 	@Override
@@ -81,6 +85,20 @@ public class CommerceInventoryWarehouseItemWarehouseNameComparator
 	public boolean isAscending() {
 		return _ascending;
 	}
+
+	private CommerceInventoryWarehouseItemWarehouseNameComparator(
+		boolean ascending) {
+
+		_ascending = ascending;
+	}
+
+	private static final CommerceInventoryWarehouseItemWarehouseNameComparator
+		_INSTANCE_ASCENDING =
+			new CommerceInventoryWarehouseItemWarehouseNameComparator(true);
+
+	private static final CommerceInventoryWarehouseItemWarehouseNameComparator
+		_INSTANCE_DESCENDING =
+			new CommerceInventoryWarehouseItemWarehouseNameComparator(false);
 
 	private final boolean _ascending;
 
