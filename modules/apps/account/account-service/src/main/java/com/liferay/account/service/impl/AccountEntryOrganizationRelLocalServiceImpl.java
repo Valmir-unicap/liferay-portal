@@ -88,6 +88,8 @@ public class AccountEntryOrganizationRelLocalServiceImpl
 
 		_reindexAccountEntry(accountEntryId);
 		_reindexOrganization(organizationId);
+		System.out.println("testando");
+
 	}
 
 	@Override
