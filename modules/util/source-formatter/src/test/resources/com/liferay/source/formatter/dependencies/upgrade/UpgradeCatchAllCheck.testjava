@@ -119,6 +119,20 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		new CommercePriceListPriorityComparator();
 		new CommercePricingClassCreateDateComparator();
 		new CommerceTierPriceEntryMinQuantityComparator();
+		new LayoutClassedModelUsageModifiedDateComparator();
+		new LayoutCreateDateComparator();
+		new LayoutModifiedDateComparator();
+		new LayoutNameComparator();
+		new LayoutPageTemplateEntryCreateDateComparator();
+		new LayoutPageTemplateEntryModifiedDateComparator();
+		new LayoutPageTemplateEntryNameComparator();
+		new LayoutPageTemplateCollectionCreateDateComparator();
+		new LayoutPageTemplateCollectionLayoutPageTemplateEntryCreateDateComparator();
+		new LayoutPageTemplateCollectionLayoutPageTemplateEntryModifiedDateComparator();
+		new LayoutPageTemplateCollectionLayoutPageTemplateEntryNameComparator();
+		new LayoutPageTemplateCollectionModifiedDateComparator();
+		new LayoutPageTemplateCollectionNameComparator();
+		new LayoutRelevanceComparator();
 
 		PortletDisplayTemplateManager.DISPLAY_STYLE_PREFIX;
 		PortletDisplayTemplateManager.ENTRIES;
@@ -164,6 +178,20 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		new CommercePriceListDisplayDateComparator(showHiddenPages);
 		new CommercePriceListCreateDateComparator(showHiddenPages);
 		new CommercePriceEntryUOMCreateDateComparator(showHiddenPages);
+		new LayoutClassedModelUsageModifiedDateComparator(showHiddenPages);
+		new LayoutCreateDateComparator(showHiddenPages);
+		new LayoutModifiedDateComparator(showHiddenPages);
+		new LayoutNameComparator(showHiddenPages);
+		new LayoutPageTemplateEntryCreateDateComparator(showHiddenPages);
+		new LayoutPageTemplateEntryModifiedDateComparator(showHiddenPages);
+		new LayoutPageTemplateEntryNameComparator(showHiddenPages);
+		new LayoutPageTemplateCollectionCreateDateComparator(showHiddenPages);
+		new LayoutPageTemplateCollectionLayoutPageTemplateEntryCreateDateComparator(showHiddenPages);
+		new LayoutPageTemplateCollectionLayoutPageTemplateEntryModifiedDateComparator(showHiddenPages);
+		new LayoutPageTemplateCollectionLayoutPageTemplateEntryNameComparator(showHiddenPages);
+		new LayoutPageTemplateCollectionModifiedDateComparator(showHiddenPages);
+		new LayoutPageTemplateCollectionNameComparator(showHiddenPages);
+		new LayoutRelevanceComparator(showHiddenPages);
 	}
 
 	public void method(CommerceAddress commerceAddress) {

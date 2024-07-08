@@ -115,6 +115,174 @@
 		"to": "StructureStructureKeyComparator.getInstance(false)"
 	},
 	{
+		"from": "new LayoutClassedModelUsageModifiedDateComparator()",
+		"issueKey": "LPD-26703",
+		"skipParametersValidation": true,
+		"to": "LayoutClassedModelUsageModifiedDateComparator.getInstance(true)"
+	},
+	{
+		"from": "new LayoutClassedModelUsageModifiedDateComparator(boolean paramName)",
+		"issueKey": "LPD-26703",
+		"skipParametersValidation": true,
+		"to": "LayoutClassedModelUsageModifiedDateComparator.getInstance(param#0#)"
+	},
+	{
+		"from": "new LayoutCreateDateComparator()",
+		"issueKey": "LPD-26703",
+		"skipParametersValidation": true,
+		"to": "LayoutCreateDateComparator.getInstance(true)"
+	},
+	{
+		"from": "new LayoutCreateDateComparator(boolean paramName)",
+		"issueKey": "LPD-26703",
+		"skipParametersValidation": true,
+		"to": "LayoutCreateDateComparator.getInstance(param#0#)"
+	},
+	{
+		"from": "new LayoutModifiedDateComparator()",
+		"issueKey": "LPD-26703",
+		"skipParametersValidation": true,
+		"to": "LayoutModifiedDateComparator.getInstance(false)"
+	},
+	{
+		"from": "new LayoutModifiedDateComparator(boolean paramName)",
+		"issueKey": "LPD-26703",
+		"skipParametersValidation": true,
+		"to": "LayoutModifiedDateComparator.getInstance(param#0#)"
+	},
+	{
+		"from": "new LayoutNameComparator()",
+		"issueKey": "LPD-26703",
+		"skipParametersValidation": true,
+		"to": "LayoutNameComparator.getInstance(false)"
+	},
+	{
+		"from": "new LayoutNameComparator(boolean paramName)",
+		"issueKey": "LPD-26703",
+		"skipParametersValidation": true,
+		"to": "LayoutNameComparator.getInstance(param#0#)"
+	},
+	{
+		"from": "new LayoutPageTemplateCollectionCreateDateComparator()",
+		"issueKey": "LPD-26703",
+		"skipParametersValidation": true,
+		"to": "LayoutPageTemplateCollectionCreateDateComparator.getInstance(true)"
+	},
+	{
+		"from": "new LayoutPageTemplateCollectionCreateDateComparator(boolean paramName)",
+		"issueKey": "LPD-26703",
+		"skipParametersValidation": true,
+		"to": "LayoutPageTemplateCollectionCreateDateComparator.getInstance(param#0#)"
+	},
+	{
+		"from": "new LayoutPageTemplateCollectionLayoutPageTemplateEntryCreateDateComparator()",
+		"issueKey": "LPD-26703",
+		"skipParametersValidation": true,
+		"to": "LayoutPageTemplateCollectionLayoutPageTemplateEntryCreateDateComparator.getInstance(false)"
+	},
+	{
+		"from": "new LayoutPageTemplateCollectionLayoutPageTemplateEntryCreateDateComparator(boolean paramName)",
+		"issueKey": "LPD-26703",
+		"skipParametersValidation": true,
+		"to": "LayoutPageTemplateCollectionLayoutPageTemplateEntryCreateDateComparator.getInstance(param#0#)"
+	},
+	{
+		"from": "new LayoutPageTemplateCollectionLayoutPageTemplateEntryModifiedDateComparator()",
+		"issueKey": "LPD-26703",
+		"skipParametersValidation": true,
+		"to": "LayoutPageTemplateCollectionLayoutPageTemplateEntryModifiedDateComparator.getInstance(false)"
+	},
+	{
+		"from": "new LayoutPageTemplateCollectionLayoutPageTemplateEntryModifiedDateComparator(boolean paramName)",
+		"issueKey": "LPD-26703",
+		"skipParametersValidation": true,
+		"to": "LayoutPageTemplateCollectionLayoutPageTemplateEntryModifiedDateComparator.getInstance(param#0#)"
+	},
+	{
+		"from": "new LayoutPageTemplateCollectionLayoutPageTemplateEntryNameComparator()",
+		"issueKey": "LPD-26703",
+		"skipParametersValidation": true,
+		"to": "LayoutPageTemplateCollectionLayoutPageTemplateEntryNameComparator.getInstance(false)"
+	},
+	{
+		"from": "new LayoutPageTemplateCollectionLayoutPageTemplateEntryNameComparator(boolean paramName)",
+		"issueKey": "LPD-26703",
+		"skipParametersValidation": true,
+		"to": "LayoutPageTemplateCollectionLayoutPageTemplateEntryNameComparator.getInstance(param#0#)"
+	},
+	{
+		"from": "new LayoutPageTemplateCollectionModifiedDateComparator()",
+		"issueKey": "LPD-26703",
+		"skipParametersValidation": true,
+		"to": "LayoutPageTemplateCollectionModifiedDateComparator.getInstance(true)"
+	},
+	{
+		"from": "new LayoutPageTemplateCollectionModifiedDateComparator(boolean paramName)",
+		"issueKey": "LPD-26703",
+		"skipParametersValidation": true,
+		"to": "LayoutPageTemplateCollectionModifiedDateComparator.getInstance(param#0#)"
+	},
+	{
+		"from": "new LayoutPageTemplateCollectionNameComparator()",
+		"issueKey": "LPD-26703",
+		"skipParametersValidation": true,
+		"to": "LayoutPageTemplateCollectionNameComparator.getInstance(false)"
+	},
+	{
+		"from": "new LayoutPageTemplateCollectionNameComparator(boolean paramName)",
+		"issueKey": "LPD-26703",
+		"skipParametersValidation": true,
+		"to": "LayoutPageTemplateCollectionNameComparator.getInstance(param#0#)"
+	},
+	{
+		"from": "new LayoutPageTemplateEntryCreateDateComparator()",
+		"issueKey": "LPD-26703",
+		"skipParametersValidation": true,
+		"to": "LayoutPageTemplateEntryCreateDateComparator.getInstance(false)"
+	},
+	{
+		"from": "new LayoutPageTemplateEntryCreateDateComparator(boolean paramName)",
+		"issueKey": "LPD-26703",
+		"skipParametersValidation": true,
+		"to": "LayoutPageTemplateEntryCreateDateComparator.getInstance(param#0#)"
+	},
+	{
+		"from": "new LayoutPageTemplateEntryModifiedDateComparator()",
+		"issueKey": "LPD-26703",
+		"skipParametersValidation": true,
+		"to": "LayoutPageTemplateEntryModifiedDateComparator.getInstance(false)"
+	},
+	{
+		"from": "new LayoutPageTemplateEntryModifiedDateComparator(boolean paramName)",
+		"issueKey": "LPD-26703",
+		"skipParametersValidation": true,
+		"to": "LayoutPageTemplateEntryModifiedDateComparator.getInstance(param#0#)"
+	},
+	{
+		"from": "new LayoutPageTemplateEntryNameComparator()",
+		"issueKey": "LPD-26703",
+		"skipParametersValidation": true,
+		"to": "LayoutPageTemplateEntryNameComparator.getInstance(false)"
+	},
+	{
+		"from": "new LayoutPageTemplateEntryNameComparator(boolean paramName)",
+		"issueKey": "LPD-26703",
+		"skipParametersValidation": true,
+		"to": "LayoutPageTemplateEntryNameComparator.getInstance(param#0#)"
+	},
+	{
+		"from": "new LayoutRelevanceComparator()",
+		"issueKey": "LPD-26703",
+		"skipParametersValidation": true,
+		"to": "LayoutRelevanceComparator.getInstance(true)"
+	},
+	{
+		"from": "new LayoutRelevanceComparator(boolean paramName)",
+		"issueKey": "LPD-26703",
+		"skipParametersValidation": true,
+		"to": "LayoutRelevanceComparator.getInstance(param#0#)"
+	},
+	{
 		"from": "new CommercePriceEntryUOMCreateDateComparator()",
 		"issueKey": "LPD-28067",
 		"skipParametersValidation": true,

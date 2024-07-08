@@ -134,6 +134,20 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		CommercePriceListPriorityComparator.getInstance(false);
 		CommercePricingClassCreateDateComparator.getInstance(false);
 		CommerceTierPriceEntryMinQuantityComparator.getInstance(false);
+		LayoutClassedModelUsageModifiedDateComparator.getInstance(true);
+		LayoutCreateDateComparator.getInstance(true);
+		LayoutModifiedDateComparator.getInstance(false);
+		LayoutNameComparator.getInstance(false);
+		LayoutPageTemplateEntryCreateDateComparator.getInstance(false);
+		LayoutPageTemplateEntryModifiedDateComparator.getInstance(false);
+		LayoutPageTemplateEntryNameComparator.getInstance(false);
+		LayoutPageTemplateCollectionCreateDateComparator.getInstance(true);
+		LayoutPageTemplateCollectionLayoutPageTemplateEntryCreateDateComparator.getInstance(false);
+		LayoutPageTemplateCollectionLayoutPageTemplateEntryModifiedDateComparator.getInstance(false);
+		LayoutPageTemplateCollectionLayoutPageTemplateEntryNameComparator.getInstance(false);
+		LayoutPageTemplateCollectionModifiedDateComparator.getInstance(true);
+		LayoutPageTemplateCollectionNameComparator.getInstance(false);
+		LayoutRelevanceComparator.getInstance(true);
 
 		PortletDisplayTemplateConstants.DISPLAY_STYLE_PREFIX;
 		PortletDisplayTemplateConstants.ENTRIES;
@@ -178,6 +192,20 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		CommercePriceListDisplayDateComparator.getInstance(showHiddenPages);
 		CommercePriceListCreateDateComparator.getInstance(showHiddenPages);
 		CommercePriceEntryUOMCreateDateComparator.getInstance(showHiddenPages);
+		LayoutClassedModelUsageModifiedDateComparator.getInstance(showHiddenPages);
+		LayoutCreateDateComparator.getInstance(showHiddenPages);
+		LayoutModifiedDateComparator.getInstance(showHiddenPages);
+		LayoutNameComparator.getInstance(showHiddenPages);
+		LayoutPageTemplateEntryCreateDateComparator.getInstance(showHiddenPages);
+		LayoutPageTemplateEntryModifiedDateComparator.getInstance(showHiddenPages);
+		LayoutPageTemplateEntryNameComparator.getInstance(showHiddenPages);
+		LayoutPageTemplateCollectionCreateDateComparator.getInstance(showHiddenPages);
+		LayoutPageTemplateCollectionLayoutPageTemplateEntryCreateDateComparator.getInstance(showHiddenPages);
+		LayoutPageTemplateCollectionLayoutPageTemplateEntryModifiedDateComparator.getInstance(showHiddenPages);
+		LayoutPageTemplateCollectionLayoutPageTemplateEntryNameComparator.getInstance(showHiddenPages);
+		LayoutPageTemplateCollectionModifiedDateComparator.getInstance(showHiddenPages);
+		LayoutPageTemplateCollectionNameComparator.getInstance(showHiddenPages);
+		LayoutRelevanceComparator.getInstance(showHiddenPages);
 	}
 
 	public void method(CommerceAddress commerceAddress) {
