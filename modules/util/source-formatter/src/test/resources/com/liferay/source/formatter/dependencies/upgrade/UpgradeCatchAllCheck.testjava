@@ -113,12 +113,38 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 
 		new AssetListEntryCreateDateComparator();
 		new AssetTagCountComparator();
+		new CategoryModifiedDateComparator();
+		new CategoryTitleComparator();
 		new CommercePriceEntryUOMCreateDateComparator();
 		new CommercePriceListCreateDateComparator();
 		new CommercePriceListDisplayDateComparator();
 		new CommercePriceListPriorityComparator();
 		new CommercePricingClassCreateDateComparator();
 		new CommerceTierPriceEntryMinQuantityComparator();
+		new LayoutClassedModelUsageModifiedDateComparator();
+		new LayoutCreateDateComparator();
+		new LayoutModifiedDateComparator();
+		new LayoutPageTemplateEntryCreateDateComparator();
+		new LayoutPageTemplateEntryModifiedDateComparator();
+		new LayoutPageTemplateEntryNameComparator();
+		new LayoutPageTemplateCollectionCreateDateComparator();
+		new LayoutPageTemplateCollectionLayoutPageTemplateEntryCreateDateComparator();
+		new LayoutPageTemplateCollectionLayoutPageTemplateEntryModifiedDateComparator();
+		new LayoutPageTemplateCollectionLayoutPageTemplateEntryNameComparator();
+		new LayoutPageTemplateCollectionModifiedDateComparator();
+		new LayoutPageTemplateCollectionNameComparator();
+		new LayoutRelevanceComparator();
+		new MBObjectsComparator();
+		new MBObjectsModifiedDateComparator();
+		new MBObjectsTitleComparator();
+		new MessageCreateDateComparator();
+		new MessageModifiedDateComparator();
+		new MessageSubjectComparator();
+		new MessageURLSubjectComparator();
+		new ThreadCreateDateComparator();
+		new ThreadLastPostDateComparator();
+		new ThreadModifiedDateComparator();
+		new ThreadTitleComparator();
 
 		PortletDisplayTemplateManager.DISPLAY_STYLE_PREFIX;
 		PortletDisplayTemplateManager.ENTRIES;
@@ -158,12 +184,38 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 
 		new AssetListEntryCreateDateComparator(showHiddenPages);
 		new AssetTagCountComparator(showHiddenPages);
+		new CategoryModifiedDateComparator(showHiddenPages);
+		new CategoryTitleComparator(showHiddenPages);
 		new CommercePricingClassCreateDateComparator(showHiddenPages);
 		new CommerceTierPriceEntryMinQuantityComparator(showHiddenPages);
 		new CommercePriceListPriorityComparator(showHiddenPages);
 		new CommercePriceListDisplayDateComparator(showHiddenPages);
 		new CommercePriceListCreateDateComparator(showHiddenPages);
 		new CommercePriceEntryUOMCreateDateComparator(showHiddenPages);
+		new LayoutClassedModelUsageModifiedDateComparator(showHiddenPages);
+		new LayoutCreateDateComparator(showHiddenPages);
+		new LayoutModifiedDateComparator(showHiddenPages);
+		new LayoutPageTemplateEntryCreateDateComparator(showHiddenPages);
+		new LayoutPageTemplateEntryModifiedDateComparator(showHiddenPages);
+		new LayoutPageTemplateEntryNameComparator(showHiddenPages);
+		new LayoutPageTemplateCollectionCreateDateComparator(showHiddenPages);
+		new LayoutPageTemplateCollectionLayoutPageTemplateEntryCreateDateComparator(showHiddenPages);
+		new LayoutPageTemplateCollectionLayoutPageTemplateEntryModifiedDateComparator(showHiddenPages);
+		new LayoutPageTemplateCollectionLayoutPageTemplateEntryNameComparator(showHiddenPages);
+		new LayoutPageTemplateCollectionModifiedDateComparator(showHiddenPages);
+		new LayoutPageTemplateCollectionNameComparator(showHiddenPages);
+		new LayoutRelevanceComparator(showHiddenPages);
+		new MBObjectsComparator(showHiddenPages);
+		new MBObjectsModifiedDateComparator(showHiddenPages);
+		new MBObjectsTitleComparator(showHiddenPages);
+		new MessageCreateDateComparator(showHiddenPages);
+		new MessageModifiedDateComparator(showHiddenPages);
+		new MessageSubjectComparator(showHiddenPages);
+		new MessageURLSubjectComparator(showHiddenPages);
+		new ThreadCreateDateComparator(showHiddenPages);
+		new ThreadLastPostDateComparator(showHiddenPages);
+		new ThreadModifiedDateComparator(showHiddenPages);
+		new ThreadTitleComparator(showHiddenPages);
 	}
 
 	public void method(CommerceAddress commerceAddress) {
