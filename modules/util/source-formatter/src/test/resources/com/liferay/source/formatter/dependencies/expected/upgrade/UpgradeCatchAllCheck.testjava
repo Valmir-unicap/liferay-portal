@@ -138,6 +138,7 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		ArticleTitleComparator.getInstance(false);
 		ArticleVersionComparator.getInstance(false);
 		AssetEntryAssetCategoryRelAssetCategoryIdComparator.getInstance(false);
+		AssetDisplayPageEntryModifiedDateComparator.getInstance(true);
 		AssetListEntryCreateDateComparator.getInstance(false);
 		AssetTagCountComparator.getInstance(false);
 		CommercePriceEntryUOMCreateDateComparator.getInstance(false);
@@ -154,6 +155,21 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		FolderArticleModifiedDateComparator.getInstance(false);
 		FolderArticleTitleComparator.getInstance(false);
 		FolderIdComparator.getInstance(false);
+		LayoutClassedModelUsageModifiedDateComparator.getInstance(true);
+		LayoutCreateDateComparator.getInstance(true);
+		LayoutModifiedDateComparator.getInstance(false);
+		LayoutNameComparator.getInstance(false);
+		LayoutPageTemplateEntryCreateDateComparator.getInstance(false);
+		LayoutPageTemplateEntryModifiedDateComparator.getInstance(false);
+		LayoutPageTemplateEntryNameComparator.getInstance(false);
+		LayoutPageTemplateCollectionCreateDateComparator.getInstance(true);
+		LayoutPageTemplateCollectionLayoutPageTemplateEntryCreateDateComparator.getInstance(false);
+		LayoutPageTemplateCollectionLayoutPageTemplateEntryModifiedDateComparator.getInstance(false);
+		LayoutPageTemplateCollectionLayoutPageTemplateEntryNameComparator.getInstance(false);
+		LayoutPageTemplateCollectionModifiedDateComparator.getInstance(true);
+		LayoutPageTemplateCollectionNameComparator.getInstance(false);
+		LayoutRelevanceComparator.getInstance(true);
+		PortletDisplayNameComparator.getInstance(false);
 
 		PortletDisplayTemplateConstants.DISPLAY_STYLE_PREFIX;
 		PortletDisplayTemplateConstants.ENTRIES;
@@ -199,6 +215,7 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		ArticleTitleComparator.getInstance(showHiddenPages);
 		ArticleVersionComparator.getInstance(showHiddenPages);
 		AssetEntryAssetCategoryRelAssetCategoryIdComparator.getInstance(showHiddenPages);
+		AssetDisplayPageEntryModifiedDateComparator.getInstance(showHiddenPages);
 		AssetListEntryCreateDateComparator.getInstance(showHiddenPages);
 		AssetTagCountComparator.getInstance(showHiddenPages);
 		CommercePricingClassCreateDateComparator.getInstance(showHiddenPages);
@@ -215,6 +232,21 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		FolderArticleModifiedDateComparator.getInstance(showHiddenPages);
 		FolderArticleTitleComparator.getInstance(showHiddenPages);
 		FolderIdComparator.getInstance(showHiddenPages);
+		LayoutClassedModelUsageModifiedDateComparator.getInstance(showHiddenPages);
+		LayoutCreateDateComparator.getInstance(showHiddenPages);
+		LayoutModifiedDateComparator.getInstance(showHiddenPages);
+		LayoutNameComparator.getInstance(showHiddenPages);
+		LayoutPageTemplateEntryCreateDateComparator.getInstance(showHiddenPages);
+		LayoutPageTemplateEntryModifiedDateComparator.getInstance(showHiddenPages);
+		LayoutPageTemplateEntryNameComparator.getInstance(showHiddenPages);
+		LayoutPageTemplateCollectionCreateDateComparator.getInstance(showHiddenPages);
+		LayoutPageTemplateCollectionLayoutPageTemplateEntryCreateDateComparator.getInstance(showHiddenPages);
+		LayoutPageTemplateCollectionLayoutPageTemplateEntryModifiedDateComparator.getInstance(showHiddenPages);
+		LayoutPageTemplateCollectionLayoutPageTemplateEntryNameComparator.getInstance(showHiddenPages);
+		LayoutPageTemplateCollectionModifiedDateComparator.getInstance(showHiddenPages);
+		LayoutPageTemplateCollectionNameComparator.getInstance(showHiddenPages);
+		LayoutRelevanceComparator.getInstance(showHiddenPages);
+		PortletDisplayNameComparator.getInstance(showHiddenPages);
 	}
 
 	public void method(CommerceAddress commerceAddress) {
