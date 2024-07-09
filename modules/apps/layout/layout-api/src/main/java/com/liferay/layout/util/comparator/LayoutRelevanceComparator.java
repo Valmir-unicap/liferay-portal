@@ -28,10 +28,6 @@ public class LayoutRelevanceComparator extends OrderByComparator<Layout> {
 		return _INSTANCE_DESCENDING;
 	}
 
-	public LayoutRelevanceComparator(boolean ascending) {
-		_ascending = ascending;
-	}
-
 	@Override
 	public int compare(Layout layout1, Layout layout2) {
 		int value = DateUtil.compareTo(
@@ -61,6 +57,10 @@ public class LayoutRelevanceComparator extends OrderByComparator<Layout> {
 	@Override
 	public boolean isAscending() {
 		return _ascending;
+	}
+
+	private LayoutRelevanceComparator(boolean ascending) {
+		_ascending = ascending;
 	}
 
 	private static final LayoutRelevanceComparator _INSTANCE_ASCENDING =

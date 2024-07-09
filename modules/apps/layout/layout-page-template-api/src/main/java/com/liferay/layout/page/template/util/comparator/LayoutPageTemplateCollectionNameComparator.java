@@ -35,10 +35,6 @@ public class LayoutPageTemplateCollectionNameComparator
 		return _INSTANCE_DESCENDING;
 	}
 
-	public LayoutPageTemplateCollectionNameComparator(boolean ascending) {
-		_ascending = ascending;
-	}
-
 	@Override
 	public int compare(
 		LayoutPageTemplateCollection layoutPageTemplateCollection1,
@@ -75,6 +71,10 @@ public class LayoutPageTemplateCollectionNameComparator
 	@Override
 	public boolean isAscending() {
 		return _ascending;
+	}
+
+	private LayoutPageTemplateCollectionNameComparator(boolean ascending) {
+		_ascending = ascending;
 	}
 
 	private static final LayoutPageTemplateCollectionNameComparator
