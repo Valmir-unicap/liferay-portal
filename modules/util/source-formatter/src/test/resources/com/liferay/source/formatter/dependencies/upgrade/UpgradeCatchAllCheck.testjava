@@ -126,6 +126,8 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		new AssetDisplayPageEntryModifiedDateComparator();
 		new AssetListEntryCreateDateComparator();
 		new AssetTagCountComparator();
+		new CategoryModifiedDateComparator();
+		new CategoryTitleComparator();
 		new CommercePriceEntryUOMCreateDateComparator();
 		new CommercePriceListCreateDateComparator();
 		new CommercePriceListDisplayDateComparator();
@@ -154,7 +156,18 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		new LayoutPageTemplateCollectionModifiedDateComparator();
 		new LayoutPageTemplateCollectionNameComparator();
 		new LayoutRelevanceComparator();
+		new MBObjectsComparator();
+		new MBObjectsModifiedDateComparator();
+		new MBObjectsTitleComparator();
+		new MessageCreateDateComparator();
+		new MessageModifiedDateComparator();
+		new MessageSubjectComparator();
+		new MessageURLSubjectComparator();
 		new PortletDisplayNameComparator();
+		new ThreadCreateDateComparator();
+		new ThreadLastPostDateComparator();
+		new ThreadModifiedDateComparator();
+		new ThreadTitleComparator();
 
 		PortletDisplayTemplateManager.DISPLAY_STYLE_PREFIX;
 		PortletDisplayTemplateManager.ENTRIES;
@@ -204,6 +217,8 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		new AssetDisplayPageEntryModifiedDateComparator(showHiddenPages);
 		new AssetListEntryCreateDateComparator(showHiddenPages);
 		new AssetTagCountComparator(showHiddenPages);
+		new CategoryModifiedDateComparator(showHiddenPages);
+		new CategoryTitleComparator(showHiddenPages);
 		new CommercePricingClassCreateDateComparator(showHiddenPages);
 		new CommerceTierPriceEntryMinQuantityComparator(showHiddenPages);
 		new CommercePriceListPriorityComparator(showHiddenPages);
@@ -232,7 +247,18 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		new LayoutPageTemplateCollectionModifiedDateComparator(showHiddenPages);
 		new LayoutPageTemplateCollectionNameComparator(showHiddenPages);
 		new LayoutRelevanceComparator(showHiddenPages);
+		new MBObjectsComparator(showHiddenPages);
+		new MBObjectsModifiedDateComparator(showHiddenPages);
+		new MBObjectsTitleComparator(showHiddenPages);
+		new MessageCreateDateComparator(showHiddenPages);
+		new MessageModifiedDateComparator(showHiddenPages);
+		new MessageSubjectComparator(showHiddenPages);
+		new MessageURLSubjectComparator(showHiddenPages);
 		new PortletDisplayNameComparator(showHiddenPages);
+		new ThreadCreateDateComparator(showHiddenPages);
+		new ThreadLastPostDateComparator(showHiddenPages);
+		new ThreadModifiedDateComparator(showHiddenPages);
+		new ThreadTitleComparator(showHiddenPages);
 	}
 
 	public void method(CommerceAddress commerceAddress) {
