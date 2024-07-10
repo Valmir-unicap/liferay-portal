@@ -128,6 +128,8 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 
 		AssetListEntryCreateDateComparator.getInstance(false);
 		AssetTagCountComparator.getInstance(false);
+		CategoryModifiedDateComparator.getInstance(false);
+		CategoryTitleComparator.getInstance(false);
 		CommercePriceEntryUOMCreateDateComparator.getInstance(false);
 		CommercePriceListCreateDateComparator.getInstance(false);
 		CommercePriceListDisplayDateComparator.getInstance(false);
@@ -148,6 +150,17 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		LayoutPageTemplateCollectionModifiedDateComparator.getInstance(true);
 		LayoutPageTemplateCollectionNameComparator.getInstance(false);
 		LayoutRelevanceComparator.getInstance(true);
+		MBObjectsComparator.getInstance(false);
+		MBObjectsModifiedDateComparator.getInstance(false);
+		MBObjectsTitleComparator.getInstance(false);
+		MessageCreateDateComparator.getInstance(false);
+		MessageModifiedDateComparator.getInstance(false);
+		MessageSubjectComparator.getInstance(false);
+		MessageURLSubjectComparator.getInstance(false);
+		ThreadCreateDateComparator.getInstance(false);
+		ThreadLastPostDateComparator.getInstance(false);
+		ThreadModifiedDateComparator.getInstance(false);
+		ThreadTitleComparator.getInstance(false);
 
 		PortletDisplayTemplateConstants.DISPLAY_STYLE_PREFIX;
 		PortletDisplayTemplateConstants.ENTRIES;
@@ -186,6 +199,8 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 
 		AssetListEntryCreateDateComparator.getInstance(showHiddenPages);
 		AssetTagCountComparator.getInstance(showHiddenPages);
+		CategoryModifiedDateComparator.getInstance(showHiddenPages);
+		CategoryTitleComparator.getInstance(showHiddenPages);
 		CommercePricingClassCreateDateComparator.getInstance(showHiddenPages);
 		CommerceTierPriceEntryMinQuantityComparator.getInstance(showHiddenPages);
 		CommercePriceListPriorityComparator.getInstance(showHiddenPages);
@@ -206,6 +221,17 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		LayoutPageTemplateCollectionModifiedDateComparator.getInstance(showHiddenPages);
 		LayoutPageTemplateCollectionNameComparator.getInstance(showHiddenPages);
 		LayoutRelevanceComparator.getInstance(showHiddenPages);
+		MBObjectsComparator.getInstance(showHiddenPages);
+		MBObjectsModifiedDateComparator.getInstance(showHiddenPages);
+		MBObjectsTitleComparator.getInstance(showHiddenPages);
+		MessageCreateDateComparator.getInstance(showHiddenPages);
+		MessageModifiedDateComparator.getInstance(showHiddenPages);
+		MessageSubjectComparator.getInstance(showHiddenPages);
+		MessageURLSubjectComparator.getInstance(showHiddenPages);
+		ThreadCreateDateComparator.getInstance(showHiddenPages);
+		ThreadLastPostDateComparator.getInstance(showHiddenPages);
+		ThreadModifiedDateComparator.getInstance(showHiddenPages);
+		ThreadTitleComparator.getInstance(showHiddenPages);
 	}
 
 	public void method(CommerceAddress commerceAddress) {
