@@ -119,6 +119,33 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		new CommercePriceListPriorityComparator();
 		new CommercePricingClassCreateDateComparator();
 		new CommerceTierPriceEntryMinQuantityComparator();
+		new DataProviderInstanceModifiedDateComparator();
+		new DataProviderInstanceNameComparator();
+		new DEDataListViewCreateDateComparator();
+		new DEDataListViewNameComparator();
+		new DDLRecordCreateDateComparator();
+		new DDLRecordIdComparator();
+		new DDLRecordSetCreateDateComparator();
+		new DDLRecordSetNameComparator();
+		new DDMFormInstanceNameComparator();
+		new DDMFormInstanceRecordIdComparator();
+		new KaleoDefinitionVersionActiveComparator();
+		new KaleoDefinitionVersionComparator();
+		new KaleoDefinitionVersionIdComparator();
+		new KaleoDefinitionVersionModifiedDateComparator();
+		new KaleoDefinitionVersionNameComparator();
+		new KaleoDefinitionVersionVersionComparator();
+		new KaleoProcessCreateDateComparator();
+		new StructureCreateDateComparator();
+		new StructureIdComparator();
+		new StructureLayoutCreateDateComparator();
+		new StructureLayoutNameComparator();
+		new StructureLinkStructureModifiedDateComparator();
+		new TemplateIdComparator();
+		new WorkflowDefinitionLinkSearchEntryResourceComparator();
+		new WorkflowDefinitionLinkSearchEntryWorkflowComparator();
+		new WorkflowDefinitionModifiedDateComparator();
+		new WorkflowMetricsSLADefinitionVersionIdComparator();
 
 		PortletDisplayTemplateManager.DISPLAY_STYLE_PREFIX;
 		PortletDisplayTemplateManager.ENTRIES;
@@ -164,6 +191,33 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		new CommercePriceListDisplayDateComparator(showHiddenPages);
 		new CommercePriceListCreateDateComparator(showHiddenPages);
 		new CommercePriceEntryUOMCreateDateComparator(showHiddenPages);
+		new DataProviderInstanceModifiedDateComparator(showHiddenPages);
+		new DataProviderInstanceNameComparator(showHiddenPages);
+		new DEDataListViewCreateDateComparator(showHiddenPages);
+		new DEDataListViewNameComparator(showHiddenPages);
+		new DDLRecordCreateDateComparator(showHiddenPages);
+		new DDLRecordIdComparator(showHiddenPages);
+		new DDLRecordSetCreateDateComparator(showHiddenPages);
+		new DDLRecordSetNameComparator(showHiddenPages);
+		new DDMFormInstanceNameComparator(showHiddenPages);
+		new DDMFormInstanceRecordIdComparator(showHiddenPages);
+		new KaleoDefinitionVersionActiveComparator(showHiddenPages);
+		new KaleoDefinitionVersionComparator(showHiddenPages);
+		new KaleoDefinitionVersionIdComparator(showHiddenPages);
+		new KaleoDefinitionVersionModifiedDateComparator(showHiddenPages);
+		new KaleoDefinitionVersionNameComparator(showHiddenPages);
+		new KaleoDefinitionVersionVersionComparator(showHiddenPages);
+		new KaleoProcessCreateDateComparator(showHiddenPages);
+		new StructureCreateDateComparator(showHiddenPages);
+		new StructureIdComparator(showHiddenPages);
+		new StructureLayoutCreateDateComparator(showHiddenPages);
+		new StructureLayoutNameComparator(showHiddenPages);
+		new StructureLinkStructureModifiedDateComparator(showHiddenPages);
+		new TemplateIdComparator(showHiddenPages);
+		new WorkflowDefinitionLinkSearchEntryResourceComparator(showHiddenPages);
+		new WorkflowDefinitionLinkSearchEntryWorkflowComparator(showHiddenPages);
+		new WorkflowDefinitionModifiedDateComparator(showHiddenPages);
+		new WorkflowMetricsSLADefinitionVersionIdComparator(showHiddenPages);
 	}
 
 	public void method(CommerceAddress commerceAddress) {

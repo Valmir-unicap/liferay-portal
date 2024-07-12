@@ -134,6 +134,33 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		CommercePriceListPriorityComparator.getInstance(false);
 		CommercePricingClassCreateDateComparator.getInstance(false);
 		CommerceTierPriceEntryMinQuantityComparator.getInstance(false);
+		DataProviderInstanceModifiedDateComparator.getInstance(false);
+		DataProviderInstanceNameComparator.getInstance(false);
+		DEDataListViewCreateDateComparator.getInstance(false);
+		DEDataListViewNameComparator.getInstance(false);
+		DDLRecordCreateDateComparator.getInstance(false);
+		DDLRecordIdComparator.getInstance(false);
+		DDLRecordSetCreateDateComparator.getInstance(false);
+		DDLRecordSetNameComparator.getInstance(false);
+		DDMFormInstanceNameComparator.getInstance(false);
+		DDMFormInstanceRecordIdComparator.getInstance(false);
+		KaleoDefinitionVersionActiveComparator.getInstance(false);
+		KaleoDefinitionVersionComparator.getInstance(false);
+		KaleoDefinitionVersionIdComparator.getInstance(false);
+		KaleoDefinitionVersionModifiedDateComparator.getInstance(false);
+		KaleoDefinitionVersionNameComparator.getInstance(false);
+		KaleoDefinitionVersionVersionComparator.getInstance(false);
+		KaleoProcessCreateDateComparator.getInstance(false);
+		StructureCreateDateComparator.getInstance(false);
+		StructureIdComparator.getInstance(false);
+		StructureLayoutCreateDateComparator.getInstance(false);
+		StructureLayoutNameComparator.getInstance(true);
+		StructureLinkStructureModifiedDateComparator.getInstance(false);
+		TemplateIdComparator.getInstance(false);
+		WorkflowDefinitionLinkSearchEntryResourceComparator.getInstance(false);
+		WorkflowDefinitionLinkSearchEntryWorkflowComparator.getInstance(false);
+		WorkflowDefinitionModifiedDateComparator.getInstance(false);
+		WorkflowMetricsSLADefinitionVersionIdComparator.getInstance(false);
 
 		PortletDisplayTemplateConstants.DISPLAY_STYLE_PREFIX;
 		PortletDisplayTemplateConstants.ENTRIES;
@@ -178,6 +205,33 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		CommercePriceListDisplayDateComparator.getInstance(showHiddenPages);
 		CommercePriceListCreateDateComparator.getInstance(showHiddenPages);
 		CommercePriceEntryUOMCreateDateComparator.getInstance(showHiddenPages);
+		DataProviderInstanceModifiedDateComparator.getInstance(showHiddenPages);
+		DataProviderInstanceNameComparator.getInstance(showHiddenPages);
+		DEDataListViewCreateDateComparator.getInstance(showHiddenPages);
+		DEDataListViewNameComparator.getInstance(showHiddenPages);
+		DDLRecordCreateDateComparator.getInstance(showHiddenPages);
+		DDLRecordIdComparator.getInstance(showHiddenPages);
+		DDLRecordSetCreateDateComparator.getInstance(showHiddenPages);
+		DDLRecordSetNameComparator.getInstance(showHiddenPages);
+		DDMFormInstanceNameComparator.getInstance(showHiddenPages);
+		DDMFormInstanceRecordIdComparator.getInstance(showHiddenPages);
+		KaleoDefinitionVersionActiveComparator.getInstance(showHiddenPages);
+		KaleoDefinitionVersionComparator.getInstance(showHiddenPages);
+		KaleoDefinitionVersionIdComparator.getInstance(showHiddenPages);
+		KaleoDefinitionVersionModifiedDateComparator.getInstance(showHiddenPages);
+		KaleoDefinitionVersionNameComparator.getInstance(showHiddenPages);
+		KaleoDefinitionVersionVersionComparator.getInstance(showHiddenPages);
+		KaleoProcessCreateDateComparator.getInstance(showHiddenPages);
+		StructureCreateDateComparator.getInstance(showHiddenPages);
+		StructureIdComparator.getInstance(showHiddenPages);
+		StructureLayoutCreateDateComparator.getInstance(showHiddenPages);
+		StructureLayoutNameComparator.getInstance(showHiddenPages);
+		StructureLinkStructureModifiedDateComparator.getInstance(showHiddenPages);
+		TemplateIdComparator.getInstance(showHiddenPages);
+		WorkflowDefinitionLinkSearchEntryResourceComparator.getInstance(showHiddenPages);
+		WorkflowDefinitionLinkSearchEntryWorkflowComparator.getInstance(showHiddenPages);
+		WorkflowDefinitionModifiedDateComparator.getInstance(showHiddenPages);
+		WorkflowMetricsSLADefinitionVersionIdComparator.getInstance(showHiddenPages);
 	}
 
 	public void method(CommerceAddress commerceAddress) {
