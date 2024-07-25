@@ -137,11 +137,12 @@ public class SiteNavigationMenuItemSelectorViewDescriptor
 		OrderByComparator<SiteNavigationMenu> orderByComparator = null;
 
 		if (orderByCol.equals("modified-date")) {
-			orderByComparator = new SiteNavigationMenuModifiedDateComparator(
-				orderByAsc);
+			orderByComparator =
+				SiteNavigationMenuModifiedDateComparator.getInstance(
+					orderByAsc);
 		}
 		else if (orderByCol.equals("name")) {
-			orderByComparator = new SiteNavigationMenuNameComparator(
+			orderByComparator = SiteNavigationMenuNameComparator.getInstance(
 				orderByAsc);
 		}
 
