@@ -129,6 +129,11 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		new CommercePriceListPriorityComparator();
 		new CommercePricingClassCreateDateComparator();
 		new CommerceTierPriceEntryMinQuantityComparator();
+		new DLContentVersionComparator();
+		new EntryDisplayDateComparator();
+		new EntryIdComparator();
+		new EntryModifiedDateComparator();
+		new EntryTitleComparator();
 		new FeedIDComparator();
 		new FeedNameComparator();
 		new FolderArticleArticleIdComparator();
@@ -137,6 +142,12 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		new FolderArticleModifiedDateComparator();
 		new FolderArticleTitleComparator();
 		new FolderIdComparator();
+		new FriendlyURLEntryCreateDateComparator();
+		new FriendlyURLEntryLocalizationComparator();
+		new ObjectFieldCreateDateComparator();
+		new PushNotificationsDevicePlatformComparator();
+		new SAPEntryNameComparator();
+		new SubscriptionClassNameIdComparator();
 
 		PortletDisplayTemplateManager.DISPLAY_STYLE_PREFIX;
 		PortletDisplayTemplateManager.ENTRIES;
@@ -190,6 +201,11 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		new CommercePriceListDisplayDateComparator(showHiddenPages);
 		new CommercePriceListCreateDateComparator(showHiddenPages);
 		new CommercePriceEntryUOMCreateDateComparator(showHiddenPages);
+		new DLContentVersionComparator(showHiddenPages);
+		new EntryDisplayDateComparator(showHiddenPages);
+		new EntryIdComparator(showHiddenPages);
+		new EntryModifiedDateComparator(showHiddenPages);
+		new EntryTitleComparator(showHiddenPages);
 		new FeedIDComparator(showHiddenPages);
 		new FeedNameComparator(showHiddenPages);
 		new FolderArticleArticleIdComparator(showHiddenPages);
@@ -198,6 +214,12 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		new FolderArticleModifiedDateComparator(showHiddenPages);
 		new FolderArticleTitleComparator(showHiddenPages);
 		new FolderIdComparator(showHiddenPages);
+		new FriendlyURLEntryCreateDateComparator(showHiddenPages);
+		new FriendlyURLEntryLocalizationComparator(showHiddenPages);
+		new ObjectFieldCreateDateComparator(showHiddenPages);
+		new PushNotificationsDevicePlatformComparator(showHiddenPages);
+		new SAPEntryNameComparator(showHiddenPages);
+		new SubscriptionClassNameIdComparator(showHiddenPages);
 	}
 
 	public void method(CommerceAddress commerceAddress) {

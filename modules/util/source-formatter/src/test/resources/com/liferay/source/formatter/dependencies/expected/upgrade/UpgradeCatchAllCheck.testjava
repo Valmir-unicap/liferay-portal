@@ -144,6 +144,11 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		CommercePriceListPriorityComparator.getInstance(false);
 		CommercePricingClassCreateDateComparator.getInstance(false);
 		CommerceTierPriceEntryMinQuantityComparator.getInstance(false);
+		DLContentVersionComparator.getInstance(false);
+		EntryDisplayDateComparator.getInstance(false);
+		EntryIdComparator.getInstance(false);
+		EntryModifiedDateComparator.getInstance(false);
+		EntryTitleComparator.getInstance(false);
 		FeedIDComparator.getInstance(false);
 		FeedNameComparator.getInstance(false);
 		FolderArticleArticleIdComparator.getInstance(false);
@@ -152,6 +157,12 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		FolderArticleModifiedDateComparator.getInstance(false);
 		FolderArticleTitleComparator.getInstance(false);
 		FolderIdComparator.getInstance(false);
+		FriendlyURLEntryCreateDateComparator.getInstance(true);
+		FriendlyURLEntryLocalizationComparator.getInstance(false);
+		ObjectFieldCreateDateComparator.getInstance(false);
+		PushNotificationsDevicePlatformComparator.getInstance(true);
+		SAPEntryNameComparator.getInstance(false);
+		SubscriptionClassNameIdComparator.getInstance(false);
 
 		PortletDisplayTemplateConstants.DISPLAY_STYLE_PREFIX;
 		PortletDisplayTemplateConstants.ENTRIES;
@@ -204,6 +215,11 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		CommercePriceListDisplayDateComparator.getInstance(showHiddenPages);
 		CommercePriceListCreateDateComparator.getInstance(showHiddenPages);
 		CommercePriceEntryUOMCreateDateComparator.getInstance(showHiddenPages);
+		DLContentVersionComparator.getInstance(showHiddenPages);
+		EntryDisplayDateComparator.getInstance(showHiddenPages);
+		EntryIdComparator.getInstance(showHiddenPages);
+		EntryModifiedDateComparator.getInstance(showHiddenPages);
+		EntryTitleComparator.getInstance(showHiddenPages);
 		FeedIDComparator.getInstance(showHiddenPages);
 		FeedNameComparator.getInstance(showHiddenPages);
 		FolderArticleArticleIdComparator.getInstance(showHiddenPages);
@@ -212,6 +228,12 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		FolderArticleModifiedDateComparator.getInstance(showHiddenPages);
 		FolderArticleTitleComparator.getInstance(showHiddenPages);
 		FolderIdComparator.getInstance(showHiddenPages);
+		FriendlyURLEntryCreateDateComparator.getInstance(showHiddenPages);
+		FriendlyURLEntryLocalizationComparator.getInstance(showHiddenPages);
+		ObjectFieldCreateDateComparator.getInstance(showHiddenPages);
+		PushNotificationsDevicePlatformComparator.getInstance(showHiddenPages);
+		SAPEntryNameComparator.getInstance(showHiddenPages);
+		SubscriptionClassNameIdComparator.getInstance(showHiddenPages);
 	}
 
 	public void method(CommerceAddress commerceAddress) {
