@@ -14,12 +14,12 @@ import com.liferay.site.admin.web.internal.util.SiteInitializerItem;
 public class SiteInitializerNameComparator
 	extends OrderByComparator<SiteInitializerItem> {
 
-	public SiteInitializerNameComparator() {
-		this(false);
-	}
+	public static SiteInitializerNameComparator getInstance(boolean ascending) {
+		if (ascending) {
+			return _INSTANCE_ASCENDING;
+		}
 
-	public SiteInitializerNameComparator(boolean ascending) {
-		_ascending = ascending;
+		return _INSTANCE_DESCENDING;
 	}
 
 	@Override
@@ -43,6 +43,16 @@ public class SiteInitializerNameComparator
 	public boolean isAscending() {
 		return _ascending;
 	}
+
+	private SiteInitializerNameComparator(boolean ascending) {
+		_ascending = ascending;
+	}
+
+	private static final SiteInitializerNameComparator _INSTANCE_ASCENDING =
+		new SiteInitializerNameComparator(true);
+
+	private static final SiteInitializerNameComparator _INSTANCE_DESCENDING =
+		new SiteInitializerNameComparator(false);
 
 	private final boolean _ascending;
 
