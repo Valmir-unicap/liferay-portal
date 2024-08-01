@@ -128,6 +128,8 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		new CommercePriceListDisplayDateComparator();
 		new CommercePriceListPriorityComparator();
 		new CommercePricingClassCreateDateComparator();
+		new CommerceShippingFixedOptionPriorityComparator();
+		new CommerceShippingFixedOptionRelCountryIdComparator();
 		new CommerceTierPriceEntryMinQuantityComparator();
 		new FeedIDComparator();
 		new FeedNameComparator();
@@ -137,6 +139,8 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		new FolderArticleModifiedDateComparator();
 		new FolderArticleTitleComparator();
 		new FolderIdComparator();
+		new SavedContentEntryClassNameIdComparator();
+		new SharingEntryModifiedDateComparator();
 
 		PortletDisplayTemplateManager.DISPLAY_STYLE_PREFIX;
 		PortletDisplayTemplateManager.ENTRIES;
@@ -184,12 +188,14 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		new ArticleVersionComparator(showHiddenPages);
 		new AssetListEntryCreateDateComparator(showHiddenPages);
 		new AssetTagCountComparator(showHiddenPages);
-		new CommercePricingClassCreateDateComparator(showHiddenPages);
-		new CommerceTierPriceEntryMinQuantityComparator(showHiddenPages);
-		new CommercePriceListPriorityComparator(showHiddenPages);
-		new CommercePriceListDisplayDateComparator(showHiddenPages);
-		new CommercePriceListCreateDateComparator(showHiddenPages);
 		new CommercePriceEntryUOMCreateDateComparator(showHiddenPages);
+		new CommercePriceListCreateDateComparator(showHiddenPages);
+		new CommercePriceListDisplayDateComparator(showHiddenPages);
+		new CommercePriceListPriorityComparator(showHiddenPages);
+		new CommercePricingClassCreateDateComparator(showHiddenPages);
+		new CommerceShippingFixedOptionPriorityComparator(showHiddenPages);
+		new CommerceShippingFixedOptionRelCountryIdComparator(showHiddenPages);
+		new CommerceTierPriceEntryMinQuantityComparator(showHiddenPages);
 		new FeedIDComparator(showHiddenPages);
 		new FeedNameComparator(showHiddenPages);
 		new FolderArticleArticleIdComparator(showHiddenPages);
@@ -198,6 +204,8 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		new FolderArticleModifiedDateComparator(showHiddenPages);
 		new FolderArticleTitleComparator(showHiddenPages);
 		new FolderIdComparator(showHiddenPages);
+		new SavedContentEntryClassNameIdComparator(showHiddenPages);
+		new SharingEntryModifiedDateComparator(showHiddenPages);
 	}
 
 	public void method(CommerceAddress commerceAddress) {

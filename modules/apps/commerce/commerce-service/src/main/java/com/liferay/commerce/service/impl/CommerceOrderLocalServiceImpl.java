@@ -616,7 +616,7 @@ public class CommerceOrderLocalServiceImpl
 
 		return commerceOrderPersistence.fetchByG_C_O_First(
 			groupId, commerceAccountId, orderStatus,
-			new CommerceOrderModifiedDateComparator());
+			CommerceOrderModifiedDateComparator.getInstance(false));
 	}
 
 	@Override

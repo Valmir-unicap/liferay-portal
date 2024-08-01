@@ -143,6 +143,8 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		CommercePriceListDisplayDateComparator.getInstance(false);
 		CommercePriceListPriorityComparator.getInstance(false);
 		CommercePricingClassCreateDateComparator.getInstance(false);
+		CommerceShippingFixedOptionPriorityComparator.getInstance(false);
+		CommerceShippingFixedOptionRelCountryIdComparator.getInstance(false);
 		CommerceTierPriceEntryMinQuantityComparator.getInstance(false);
 		FeedIDComparator.getInstance(false);
 		FeedNameComparator.getInstance(false);
@@ -152,6 +154,8 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		FolderArticleModifiedDateComparator.getInstance(false);
 		FolderArticleTitleComparator.getInstance(false);
 		FolderIdComparator.getInstance(false);
+		SavedContentEntryClassNameIdComparator.getInstance(false);
+		SharingEntryModifiedDateComparator.getInstance(false);
 
 		PortletDisplayTemplateConstants.DISPLAY_STYLE_PREFIX;
 		PortletDisplayTemplateConstants.ENTRIES;
@@ -198,12 +202,14 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		ArticleVersionComparator.getInstance(showHiddenPages);
 		AssetListEntryCreateDateComparator.getInstance(showHiddenPages);
 		AssetTagCountComparator.getInstance(showHiddenPages);
-		CommercePricingClassCreateDateComparator.getInstance(showHiddenPages);
-		CommerceTierPriceEntryMinQuantityComparator.getInstance(showHiddenPages);
-		CommercePriceListPriorityComparator.getInstance(showHiddenPages);
-		CommercePriceListDisplayDateComparator.getInstance(showHiddenPages);
-		CommercePriceListCreateDateComparator.getInstance(showHiddenPages);
 		CommercePriceEntryUOMCreateDateComparator.getInstance(showHiddenPages);
+		CommercePriceListCreateDateComparator.getInstance(showHiddenPages);
+		CommercePriceListDisplayDateComparator.getInstance(showHiddenPages);
+		CommercePriceListPriorityComparator.getInstance(showHiddenPages);
+		CommercePricingClassCreateDateComparator.getInstance(showHiddenPages);
+		CommerceShippingFixedOptionPriorityComparator.getInstance(showHiddenPages);
+		CommerceShippingFixedOptionRelCountryIdComparator.getInstance(showHiddenPages);
+		CommerceTierPriceEntryMinQuantityComparator.getInstance(showHiddenPages);
 		FeedIDComparator.getInstance(showHiddenPages);
 		FeedNameComparator.getInstance(showHiddenPages);
 		FolderArticleArticleIdComparator.getInstance(showHiddenPages);
@@ -212,6 +218,8 @@ public class UpgradeCatchAllCheck implements ConfigurationBeanDeclaration {
 		FolderArticleModifiedDateComparator.getInstance(showHiddenPages);
 		FolderArticleTitleComparator.getInstance(showHiddenPages);
 		FolderIdComparator.getInstance(showHiddenPages);
+		SavedContentEntryClassNameIdComparator.getInstance(showHiddenPages);
+		SharingEntryModifiedDateComparator.getInstance(showHiddenPages);
 	}
 
 	public void method(CommerceAddress commerceAddress) {
